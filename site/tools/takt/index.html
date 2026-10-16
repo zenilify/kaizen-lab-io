@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Takt Time Calculator</title>
+<meta name="description" content="Free takt time calculator: available time divided by customer demand, with the minimum number of operators and a bottleneck check. Runs in your browser.">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/style.css?v=20261014a">
+<script src="/assets/app.js?v=20261014a"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/" aria-label="Kaizen Lab I/O, home"><img src="/assets/logo.png" alt="Kaizen Lab" width="168" height="22"><span class="io">.io</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="/">Home</a><a href="/kpi/">KPIs</a><a href="/flow/">Flow</a><a href="/tools/oee/">OEE</a><a href="/tools/takt/" aria-current="page">Takt</a><a href="/tools/capacity/">Capacity</a><a href="/cases/bakery/">Cases</a>
+  </nav>
+  <button class="theme-btn" type="button">Theme: auto</button>
+</div></header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">Lean tool</p>
+  <h1>Takt time calculator</h1>
+  <p class="lede">Takt time is the pace the customer sets: net available time divided by demand. Compare it with your slowest station to see whether the line can keep up. Everything is calculated in your browser.</p>
+
+  <div class="calc">
+    <form id="takt" novalidate>
+      <fieldset><legend>Available time</legend>
+        <div class="field"><label for="shifts">Shifts per day</label><input id="shifts" type="number" min="1" step="1" inputmode="numeric" value="2"></div>
+        <div class="field"><label for="hours">Shift length (hours)</label><input id="hours" type="number" min="0.1" step="any" inputmode="decimal" value="8"></div>
+        <div class="field"><label for="breaks">Planned breaks per shift (min)</label><span class="hint" id="h-breaks">Lunch, breaks, team meetings, planned cleaning.</span><input id="breaks" type="number" min="0" step="any" inputmode="decimal" value="50" aria-describedby="h-breaks"></div>
+      </fieldset>
+      <fieldset><legend>Demand</legend>
+        <div class="field"><label for="demand">Customer demand (units per day)</label><input id="demand" type="number" min="1" step="any" inputmode="decimal" value="1200"></div>
+      </fieldset>
+      <fieldset><legend>Your process (optional)</legend>
+        <div class="field"><label for="work">Total work content (s per unit)</label><span class="hint" id="h-work">Sum of all manual task times for one unit.</span><input id="work" type="number" min="0" step="any" inputmode="decimal" value="210" aria-describedby="h-work"></div>
+        <div class="field"><label for="bottleneck">Slowest station cycle time (s)</label><input id="bottleneck" type="number" min="0" step="any" inputmode="decimal" value="48"></div>
+      </fieldset>
+    </form>
+
+    <section class="card result" aria-labelledby="r-title" aria-live="polite">
+      <h2 id="r-title" style="margin-top:0">Result</h2>
+      <div class="big" id="takt-val">–</div>
+      <div class="note">seconds per unit (takt time)</div>
+      <table class="plain" style="margin-top:16px">
+        <tbody>
+          <tr><td>Net available time per day</td><td class="n" id="o-avail">–</td></tr>
+          <tr><td>Required pace</td><td class="n" id="o-pace">–</td></tr>
+          <tr><td>Minimum operators (work content ÷ takt)</td><td class="n" id="o-ops">–</td></tr>
+          <tr><td>Slowest station vs takt</td><td class="n" id="o-bn">–</td></tr>
+        </tbody>
+      </table>
+      <p class="note" id="takt-verdict"></p>
+      <p class="err" id="takt-err" role="alert"></p>
+    </section>
+  </div>
+
+  <div class="cta">
+    <h2>Line can't keep up with takt?</h2>
+    <p class="note">Zenilify Consulting balances lines against takt: time studies, a yamazumi chart, and countermeasures for the bottleneck.</p>
+    <a class="btn" href="https://zenilify-consulting.com">Book a diagnostic call at zenilify-consulting.com</a>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+  <span>Kaizen Lab · small improvements, measured.</span>
+  <span><a href="https://kaizen-lab.dev">kaizen-lab.dev</a> · <a href="https://zenilify-consulting.com">Zenilify Consulting</a></span>
+</div></footer>
+<script src="/assets/takt.js?v=20261014a"></script>
+</body>
+</html>

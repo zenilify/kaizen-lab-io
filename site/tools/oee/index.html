@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OEE Calculator</title>
+<meta name="description" content="Free OEE calculator: availability × performance × quality, with the minutes lost to each. Runs in your browser; no data leaves it.">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/style.css?v=20261014a">
+<script src="/assets/app.js?v=20261014a"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/" aria-label="Kaizen Lab I/O, home"><img src="/assets/logo.png" alt="Kaizen Lab" width="168" height="22"><span class="io">.io</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="/">Home</a><a href="/kpi/">KPIs</a><a href="/flow/">Flow</a><a href="/tools/oee/" aria-current="page">OEE</a><a href="/tools/takt/">Takt</a><a href="/tools/capacity/">Capacity</a><a href="/cases/bakery/">Cases</a>
+  </nav>
+  <button class="theme-btn" type="button">Theme: auto</button>
+</div></header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">Lean tool</p>
+  <h1>OEE calculator</h1>
+  <p class="lede">Overall Equipment Effectiveness = Availability × Performance × Quality. Enter one shift (or any period) for one machine or line. Everything is calculated in your browser.</p>
+
+  <div class="calc">
+    <form id="oee" novalidate>
+      <fieldset><legend>Time</legend>
+        <div class="field"><label for="planned">Planned production time (min)</label><span class="hint" id="h-planned">Shift length minus planned breaks and planned maintenance.</span><input id="planned" type="number" min="1" step="any" inputmode="decimal" value="450" aria-describedby="h-planned"></div>
+        <div class="field"><label for="down">Unplanned downtime (min)</label><span class="hint" id="h-down">Breakdowns, changeovers, waiting for material.</span><input id="down" type="number" min="0" step="any" inputmode="decimal" value="45" aria-describedby="h-down"></div>
+      </fieldset>
+      <fieldset><legend>Speed</legend>
+        <div class="field"><label for="ideal">Ideal cycle time (s per unit)</label><span class="hint" id="h-ideal">The fastest the process can make one good unit.</span><input id="ideal" type="number" min="0.001" step="any" inputmode="decimal" value="30" aria-describedby="h-ideal"></div>
+        <div class="field"><label for="total">Total units produced</label><input id="total" type="number" min="0" step="1" inputmode="numeric" value="700"></div>
+      </fieldset>
+      <fieldset><legend>Quality</legend>
+        <div class="field"><label for="good">Good units (right first time)</label><span class="hint" id="h-good">Exclude scrap and anything that needed rework.</span><input id="good" type="number" min="0" step="1" inputmode="numeric" value="672" aria-describedby="h-good"></div>
+      </fieldset>
+    </form>
+
+    <section class="card result" aria-labelledby="r-title" aria-live="polite">
+      <h2 id="r-title" style="margin-top:0">Result</h2>
+      <div class="big" id="oee-val">–</div>
+      <div class="note" id="oee-class"></div>
+      <div class="bars">
+        <div class="bar-row" style="--c: var(--plan)"><span>Availability</span><span class="track"><span class="fill" id="b-a"></span></span><span class="pct" id="p-a">–</span></div>
+        <div class="bar-row" style="--c: var(--do)"><span>Performance</span><span class="track"><span class="fill" id="b-p"></span></span><span class="pct" id="p-p">–</span></div>
+        <div class="bar-row" style="--c: var(--check)"><span>Quality</span><span class="track"><span class="fill" id="b-q"></span></span><span class="pct" id="p-q">–</span></div>
+      </div>
+      <table class="plain" aria-label="Where the time went">
+        <tbody>
+          <tr><td>Lost to downtime</td><td class="n" id="l-a">–</td></tr>
+          <tr><td>Lost to slow cycles and small stops</td><td class="n" id="l-p">–</td></tr>
+          <tr><td>Lost to defects</td><td class="n" id="l-q">–</td></tr>
+          <tr><td><strong>Fully productive time</strong></td><td class="n" id="l-f">–</td></tr>
+        </tbody>
+      </table>
+      <p class="err" id="oee-err" role="alert"></p>
+      <p class="note">Benchmarks often quoted: 85% world class, 60% typical, 40% common at the start of an improvement program. Your biggest loss bucket is where the first PDCA cycle goes.</p>
+    </section>
+  </div>
+
+  <div class="cta">
+    <h2>OEE below where you want it?</h2>
+    <p class="note">Zenilify Consulting measures OEE on your line, finds the largest loss, and runs the first PDCA cycle with your team.</p>
+    <a class="btn" href="https://zenilify-consulting.com">Book a diagnostic call at zenilify-consulting.com</a>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+  <span>Kaizen Lab · small improvements, measured.</span>
+  <span><a href="https://kaizen-lab.dev">kaizen-lab.dev</a> · <a href="https://zenilify-consulting.com">Zenilify Consulting</a></span>
+</div></footer>
+<script src="/assets/oee.js?v=20261014a"></script>
+</body>
+</html>

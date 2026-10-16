@@ -1,0 +1,18 @@
+{
+ "_comment": "KPI targets shown on /kpi. Proposed by lane L98 (2026-10-12) as starting points; Erick owns them. Edit, commit, deploy.",
+ "_ideas_comment": "PROPOSAL for Erick (lane L99, 2026-10-12): Ideas KPI = share of ideas raised since 2026-07-01 that reached production. 60% is a starting proposal, not agreed; the ledger itself is a first count under review.",
+ "_3d_comment": "PROPOSAL for Erick (lanes L100/L100b, 2026-10-12): RFT (Right First Time) >= 80 % of printed parts right on the first attempt; make lead time (order -> final good print) <= 3 days against ~21 days to buy from AliExpress (assumptions.json). The MXN/year saving target is L98's proposal, unchanged.",
+ "uptime_pct": 99.5,
+ "backup_streak_days": 30,
+ "render_median_s": 30,
+ "pdca_closed_pct": 80,
+ "implementation_rate_pct": 60,
+ "implementation_rate_proposal": true,
+ "print_saving_mxn_year": 2000,
+ "_copq_comment": "COPQ (Cost of Poor Quality, internal failure, MXN) has no target yet: first month is the baseline; Lean aim = trend to zero.",
+ "rft_pct": 80,
+ "rft_proposal": true,
+ "make_lead_days": 3,
+ "buy_lead_days_reference": 21,
+ "make_lead_proposal": true
+}

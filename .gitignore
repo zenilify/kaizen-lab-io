@@ -1,0 +1,16 @@
+.DS_Store
+dist/
+node_modules/
+.wrangler/
+__pycache__/
+*.pyc
+*.env
+!collector/collector.env.example
+data/metrics.json.new
+# private ops material (lane L-A): never at the public root (ops-private/ is excluded from the public snapshot)
+/title-ban.txt
+/*.headers
+/collector/*.headers
+/collector/nodes.json
+/collector/collector.env
+/collector/kv.env

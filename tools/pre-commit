@@ -1,0 +1,4 @@
+#!/bin/sh
+# Secret gate: gitleaks on the staged diff, redacted output (the catcher must not print what it caught).
+command -v gitleaks >/dev/null 2>&1 || { echo "pre-commit: gitleaks not installed - refusing to commit"; exit 1; }
+exec gitleaks protect --staged --redact --no-banner

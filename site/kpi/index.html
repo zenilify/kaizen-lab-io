@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaizen Lab KPIs</title>
+<meta name="description" content="Eight honest KPIs from Kaizen Lab: uptime and backups, AI renders, PDCA cycles, ideas, 3D-printed fixes, make vs buy lead time, Right First Time and Cost of Poor Quality.">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/style.css?v=20261014a">
+<script src="/assets/app.js?v=20261014a"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/" aria-label="Kaizen Lab I/O, home"><img src="/assets/logo.png" alt="Kaizen Lab" width="168" height="22"><span class="io">.io</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="/">Home</a><a href="/kpi/" aria-current="page">KPIs</a><a href="/flow/">Flow</a><a href="/tools/oee/">OEE</a><a href="/tools/takt/">Takt</a><a href="/tools/capacity/">Capacity</a><a href="/cases/bakery/">Cases</a>
+  </nav>
+  <button class="theme-btn" type="button">Theme: auto</button>
+</div></header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">Shop-floor board</p>
+  <h1>Eight KPIs, each with a target.</h1>
+  <p class="lede">Measured by the lab itself every 15 minutes and pushed out as aggregates. If the lab is asleep or offline, the last snapshot stays up with its timestamp.</p>
+  <p class="status-line" id="status" aria-live="polite">Loading measurements…</p>
+  <div id="tiles" class="grid three" aria-live="polite"></div>
+
+  <h2>How each number is measured</h2>
+  <table class="plain">
+    <thead><tr><th scope="col">KPI</th><th scope="col">Source</th><th scope="col">Granularity</th></tr></thead>
+    <tbody>
+      <tr><td>Uptime</td><td>Uptime monitor, average of the core services (DNS, smart home, photos, documents, files, proxy, sign-in, memory)</td><td>30-day %, daily trend</td></tr>
+      <tr><td>Backup streak</td><td>Push monitors of the nightly backup and replication jobs; a day counts when no job reported a failure</td><td>days</td></tr>
+      <tr><td>AI renders</td><td>Finished jobs in the history of each local image-generation node that answers; asleep nodes keep their last count</td><td>per day, 7 days</td></tr>
+      <tr><td>PDCA cycles</td><td>The lab's failure log: every gotcha gets a number, a cause and a countermeasure</td><td>total, per week</td></tr>
+      <tr><td>Ideas</td><td>A ledger of every distinct idea raised since July 2026 (a new capability or project, not a task), each with the note or commit that proves when it was raised and when it first worked; implementation rate = implemented ÷ raised. First count, under review</td><td>per month, by category</td></tr>
+      <tr><td>3D-printed fixes</td><td>A ledger in the site's repository: print cost against the price of the alternative</td><td>per entry</td></tr>
+      <tr><td>Make vs buy (3D)</td><td>Per printed part: hours from the order (the part is asked for) to the end of the final good print, split into design/render (order → first print start) and print + rework (first start → final good end), against the days to buy it (about 21 from China, assumption) plus the 33.5 % import duty on parcels from non-treaty countries. Cost to make = filament of every attempt (failed ones included) + power; MXN saved shows "pending" until the price of the bought alternative is known, and pending parts stay out of the total</td><td>per part, median hours</td></tr>
+      <tr><td>RFT — Right First Time</td><td>The printer's own job history: parts whose first attempt finished good ÷ parts attempted. Prints aborted before the first layer are no-starts and do not count. A job that "completed" with a failed part is corrected by hand from the lab log. The whole-lab line = implemented ideas without a documented redo ÷ implemented ideas (first count, under review)</td><td>totals since the first print</td></tr>
+      <tr><td>COPQ — Cost of Poor Quality</td><td>Internal-failure cost of failed or cancelled prints: scrapped filament × MXN/kg + their energy (print hours × average power × MXN/kWh). Machine hours lost are shown as hours. "Assumptions pending" while a price is still a proposal; filament without a price is shown in grams</td><td>MXN per month, per part</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Privacy: only the whitelisted aggregate fields above are published. No hostnames, addresses, service URLs, names or hour-of-day activity. Idea titles appear only for implemented ideas marked public, printed parts only when marked public; personal ones are counted, never named.</p>
+
+  <div class="cta">
+    <h2>Want a board like this on your line?</h2>
+    <p class="note">The same KPIs, targets and PDCA rhythm work on a production floor. Zenilify Consulting sets them up with you.</p>
+    <a class="btn" href="https://zenilify-consulting.com">Book a diagnostic call</a>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+  <span>Kaizen Lab · small improvements, measured.</span>
+  <span><a href="https://kaizen-lab.dev">kaizen-lab.dev</a> · <a href="https://zenilify-consulting.com">Zenilify Consulting</a></span>
+</div></footer>
+<script src="/assets/kpi.js?v=20261014a"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  Promise.all([KL.loadMetrics(), KL.loadStatic()]).then(function (a) {
+    KL.statusLine(document.getElementById('status'), a[0]);
+    KL.renderKPIs(document.getElementById('tiles'), a[0].data, a[1]);
+  });
+});
+</script>
+</body>
+</html>

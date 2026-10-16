@@ -1,0 +1,403 @@
+{
+ "kpis": {
+  "backups": {
+   "jobs": 5,
+   "status": "ok",
+   "streak_days": 0,
+   "trend": [
+    {
+     "d": "2026-09-29",
+     "ok": true
+    },
+    {
+     "d": "2026-09-30",
+     "ok": true
+    },
+    {
+     "d": "2026-10-01",
+     "ok": true
+    },
+    {
+     "d": "2026-10-02",
+     "ok": true
+    },
+    {
+     "d": "2026-10-03",
+     "ok": true
+    },
+    {
+     "d": "2026-10-04",
+     "ok": true
+    },
+    {
+     "d": "2026-10-05",
+     "ok": false
+    },
+    {
+     "d": "2026-10-06",
+     "ok": true
+    },
+    {
+     "d": "2026-10-07",
+     "ok": false
+    },
+    {
+     "d": "2026-10-08",
+     "ok": false
+    },
+    {
+     "d": "2026-10-09",
+     "ok": false
+    },
+    {
+     "d": "2026-10-10",
+     "ok": false
+    },
+    {
+     "d": "2026-10-11",
+     "ok": false
+    },
+    {
+     "d": "2026-10-12",
+     "ok": false
+    }
+   ]
+  },
+  "copq": {
+   "assumptions_pending": true,
+   "by_month": [
+    {
+     "g": 58.6,
+     "h": 2.9,
+     "m": "2026-09",
+     "mxn": 14.53
+    }
+   ],
+   "by_part": [
+    {
+     "g": 4.3,
+     "h": 0.7,
+     "jobs": 1,
+     "mxn": null,
+     "t": "Photo-to-3D test figure"
+    },
+    {
+     "g": 54.3,
+     "h": 2.2,
+     "jobs": 4,
+     "mxn": 14.53,
+     "t": "PoE switch table stand"
+    }
+   ],
+   "copq_mxn": 14.53,
+   "hours_lost": 2.9,
+   "private_scrap_jobs": 0,
+   "scrap_g": 58.6,
+   "scrap_jobs": 5,
+   "status": "ok",
+   "unpriced_g": 4.3,
+   "unpriced_jobs": 1
+  },
+  "ideas": {
+   "as_of": "2026-10-12",
+   "by_category": {
+    "3d-printing-design": {
+     "implemented": 9,
+     "raised": 10
+    },
+    "ai-genai": {
+     "implemented": 20,
+     "raised": 22
+    },
+    "automation": {
+     "implemented": 16,
+     "raised": 26
+    },
+    "diagrams": {
+     "implemented": 5,
+     "raised": 5
+    },
+    "icons": {
+     "implemented": 2,
+     "raised": 3
+    },
+    "networking": {
+     "implemented": 10,
+     "raised": 12
+    },
+    "ops-tooling": {
+     "implemented": 24,
+     "raised": 29
+    },
+    "other": {
+     "implemented": 11,
+     "raised": 15
+    },
+    "smart-home": {
+     "implemented": 11,
+     "raised": 18
+    },
+    "storage-backup": {
+     "implemented": 8,
+     "raised": 11
+    },
+    "visualization": {
+     "implemented": 3,
+     "raised": 3
+    },
+    "voice": {
+     "implemented": 10,
+     "raised": 10
+    },
+    "web-brand": {
+     "implemented": 4,
+     "raised": 8
+    }
+   },
+   "captures_per_week": [
+    {
+     "n": 0,
+     "w": "2026-W35"
+    },
+    {
+     "n": 0,
+     "w": "2026-W36"
+    },
+    {
+     "n": 0,
+     "w": "2026-W37"
+    },
+    {
+     "n": 0,
+     "w": "2026-W38"
+    },
+    {
+     "n": 0,
+     "w": "2026-W39"
+    },
+    {
+     "n": 1,
+     "w": "2026-W40"
+    },
+    {
+     "n": 0,
+     "w": "2026-W41"
+    },
+    {
+     "n": 0,
+     "w": "2026-W42"
+    }
+   ],
+   "dropped": 4,
+   "implementation_rate_pct": 77.3,
+   "implemented": 133,
+   "in_progress": 21,
+   "monthly": [
+    {
+     "implemented": 25,
+     "m": "2026-07",
+     "raised": 33
+    },
+    {
+     "implemented": 38,
+     "m": "2026-08",
+     "raised": 45
+    },
+    {
+     "implemented": 56,
+     "m": "2026-09",
+     "raised": 75
+    },
+    {
+     "implemented": 14,
+     "m": "2026-10",
+     "raised": 19
+    }
+   ],
+   "parked": 14,
+   "public_titles_implemented": [
+    "Consulting website, bilingual, with a launch film",
+    "Public KPI site for the lab (kaizen-lab.io)",
+    "Guest Wi-Fi on its own VLAN, internet only",
+    "Small-model inference on the second GPU (frees the workstation)",
+    "Fleet-wide dotfiles and editor/agent parity (terminal, editors, local agents)",
+    "Kaizen Lab publication (Medium + Instagram)",
+    "Central fleet logs and dashboards (Loki, Grafana, Pulse, Scrutiny)",
+    "NVR with object detection (Frigate)",
+    "Writing toolkit: grammar checker, analytics, short links",
+    "Self-hosted git and CI (Forgejo + Woodpecker)"
+   ],
+   "since": "2026-07-01",
+   "status": "ok",
+   "total": 172,
+   "under_review": true
+  },
+  "make_vs_buy": {
+   "buy_lead_days_default": 21,
+   "days_saved_total": 60.4,
+   "delivered": 3,
+   "import_tax_pct": 33.5,
+   "items": [
+    {
+     "attempts": 1,
+     "buy_d": 21,
+     "design_h": 0.0,
+     "make_h": 0.5,
+     "print_h": 0.5,
+     "saved_d": 21.0,
+     "saved_mxn": null,
+     "t": "Dryer bowden adapter"
+    },
+    {
+     "attempts": 1,
+     "buy_d": 21,
+     "design_h": 12.0,
+     "make_h": 18.5,
+     "print_h": 6.5,
+     "saved_d": 20.2,
+     "saved_mxn": null,
+     "t": "Switch under-desk rails (x2)"
+    },
+    {
+     "attempts": 5,
+     "buy_d": 21,
+     "design_h": 35.5,
+     "make_h": 43.0,
+     "print_h": 7.5,
+     "saved_d": 19.2,
+     "saved_mxn": null,
+     "t": "PoE switch table stand"
+    }
+   ],
+   "lead_known": 3,
+   "median_days_buy": 21,
+   "median_days_make": 0.8,
+   "median_design_h": 12.0,
+   "median_make_h": 18.5,
+   "median_print_h": 6.5,
+   "mxn_saved_total": null,
+   "parts": 3,
+   "pending": 3,
+   "priced": 0,
+   "private_parts": 0,
+   "status": "ok"
+  },
+  "pdca": {
+   "closed": 6,
+   "open": 164,
+   "per_week": [
+    {
+     "n": 0,
+     "w": "2026-W35"
+    },
+    {
+     "n": 2,
+     "w": "2026-W36"
+    },
+    {
+     "n": 13,
+     "w": "2026-W37"
+    },
+    {
+     "n": 60,
+     "w": "2026-W38"
+    },
+    {
+     "n": 37,
+     "w": "2026-W39"
+    },
+    {
+     "n": 33,
+     "w": "2026-W40"
+    },
+    {
+     "n": 14,
+     "w": "2026-W41"
+    },
+    {
+     "n": 11,
+     "w": "2026-W42"
+    }
+   ],
+   "recorded_entities": 170,
+   "status": "ok",
+   "total": 250
+  },
+  "renders": {
+   "avg_per_day": 4.7,
+   "median_s_per_image": 3.2,
+   "nodes_answering": 4,
+   "nodes_total": 5,
+   "per_day": [
+    {
+     "d": "2026-10-06",
+     "n": 0
+    },
+    {
+     "d": "2026-10-07",
+     "n": 0
+    },
+    {
+     "d": "2026-10-08",
+     "n": 0
+    },
+    {
+     "d": "2026-10-09",
+     "n": 0
+    },
+    {
+     "d": "2026-10-10",
+     "n": 0
+    },
+    {
+     "d": "2026-10-11",
+     "n": 0
+    },
+    {
+     "d": "2026-10-12",
+     "n": 33
+    }
+   ],
+   "status": "ok",
+   "total_7d": 33
+  },
+  "rft": {
+   "attempts": 9,
+   "attempts_per_part": 2.0,
+   "failed_attempts": 5,
+   "filament_g": 430.4,
+   "first_job": "2026-09-08",
+   "history_as_of": "2026-10-12",
+   "jobs_total": 11,
+   "lab_implemented": 133,
+   "lab_rework_cycles": 7,
+   "lab_rework_ideas": 3,
+   "lab_rft_pct": 97.7,
+   "last_job": "2026-09-28",
+   "no_starts": 2,
+   "parts_attempted": 5,
+   "parts_delivered": 4,
+   "print_hours": 14.8,
+   "printer_reachable": true,
+   "rework_attempts": 4,
+   "rft_pct": 60.0,
+   "right_first_time": 3,
+   "status": "ok",
+   "unmatched_parts": 0
+  },
+  "uptime": {
+   "services": 10,
+   "status": "ok",
+   "trend": [
+    {
+     "d": "2026-10-12",
+     "pct": 97.17
+    }
+   ],
+   "value_pct": 92.64,
+   "window_days": 30
+  }
+ },
+ "schema": 1,
+ "updated_at": "2026-10-12T22:41:34Z"
+}

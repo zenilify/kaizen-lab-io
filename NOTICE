@@ -1,0 +1,12 @@
+kaizen-lab.io
+Copyright (c) 2026 Erick Zenil
+
+Two licenses apply to this repository:
+
+1. Code - MIT License (see LICENSE): JavaScript and CSS under site/assets/ (*.js, *.css),
+   functions/, tools/, collector/ and .github/.
+
+2. Content - all rights reserved: the site text (the prose in site/**/*.html), the case stories
+   (site/cases/), the Kaizen Lab name, logo and brand, images (site/assets/*.png, *.svg, QR codes)
+   and the written documents in docs/. These are (c) Erick Zenil, all rights reserved; they are
+   published here for reading and reference, not for reuse. Ask before republishing.

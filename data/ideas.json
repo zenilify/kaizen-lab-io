@@ -1,0 +1,102 @@
+{
+ "since": "2026-07-01",
+ "as_of": "2026-10-14",
+ "total": 172,
+ "implemented": 133,
+ "in_progress": 21,
+ "parked": 14,
+ "dropped": 4,
+ "implementation_rate_pct": 77.3,
+ "by_category": {
+  "voice": {
+   "raised": 10,
+   "implemented": 10
+  },
+  "smart-home": {
+   "raised": 18,
+   "implemented": 11
+  },
+  "visualization": {
+   "raised": 3,
+   "implemented": 3
+  },
+  "diagrams": {
+   "raised": 5,
+   "implemented": 5
+  },
+  "icons": {
+   "raised": 3,
+   "implemented": 2
+  },
+  "3d-printing-design": {
+   "raised": 10,
+   "implemented": 9
+  },
+  "storage-backup": {
+   "raised": 11,
+   "implemented": 8
+  },
+  "networking": {
+   "raised": 12,
+   "implemented": 10
+  },
+  "ai-genai": {
+   "raised": 22,
+   "implemented": 20
+  },
+  "automation": {
+   "raised": 26,
+   "implemented": 16
+  },
+  "ops-tooling": {
+   "raised": 29,
+   "implemented": 24
+  },
+  "web-brand": {
+   "raised": 8,
+   "implemented": 4
+  },
+  "other": {
+   "raised": 15,
+   "implemented": 11
+  }
+ },
+ "monthly": [
+  {
+   "m": "2026-07",
+   "raised": 33,
+   "implemented": 25
+  },
+  {
+   "m": "2026-08",
+   "raised": 45,
+   "implemented": 38
+  },
+  {
+   "m": "2026-09",
+   "raised": 75,
+   "implemented": 56
+  },
+  {
+   "m": "2026-10",
+   "raised": 19,
+   "implemented": 14
+  }
+ ],
+ "public_titles_implemented": [
+  "Consulting website, bilingual, with a launch film",
+  "Public KPI site for the lab (kaizen-lab.io)",
+  "Guest Wi-Fi on its own VLAN, internet only",
+  "Small-model inference on the second GPU (frees the workstation)",
+  "Fleet-wide dotfiles and editor/agent parity (terminal, editors, local agents)",
+  "Kaizen Lab publication (Medium + Instagram)",
+  "Central fleet logs and dashboards (Loki, Grafana, Pulse, Scrutiny)",
+  "NVR with object detection (Frigate)",
+  "Writing toolkit: grammar checker, analytics, short links",
+  "Self-hosted git and CI (Forgejo + Woodpecker)"
+ ],
+ "under_review": true,
+ "rework_ideas": 3,
+ "rework_cycles": 7,
+ "lab_rework_pct": 2.3
+}

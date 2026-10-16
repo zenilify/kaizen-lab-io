@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaizen Lab I/O</title>
+<meta name="description" content="Kaizen Lab measured in public: a home lab run like a production line. Inputs, process, outputs, and the small improvements in between.">
+<meta property="og:title" content="Kaizen Lab I/O">
+<meta property="og:description" content="A home lab run like a production line: honest KPIs, a SIPOC map and lean calculators.">
+<meta property="og:url" content="https://kaizen-lab.io/">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/style.css?v=20261014a">
+<script src="/assets/app.js?v=20261014a"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/" aria-label="Kaizen Lab I/O, home"><img src="/assets/logo.png" alt="Kaizen Lab" width="168" height="22"><span class="io">.io</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="/" aria-current="page">Home</a><a href="/kpi/">KPIs</a><a href="/flow/">Flow</a><a href="/tools/oee/">OEE</a><a href="/tools/takt/">Takt</a><a href="/tools/capacity/">Capacity</a><a href="/cases/bakery/">Cases</a>
+  </nav>
+  <button class="theme-btn" type="button">Theme: auto</button>
+</div></header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">Input → Process → Output → Improve</p>
+  <h1>A home lab run like a <span class="grad">production line</span>.</h1>
+  <p class="lede">Every process turns inputs into outputs. Kaizen means measuring that transformation and making it a little better, every day. This site shows Kaizen Lab the way a plant floor board would: what goes in, what comes out, and the numbers in between.</p>
+
+  <ol class="steps" aria-label="The loop">
+    <li style="--c: var(--plan)"><span class="k">Input</span><h3>What goes in</h3><p>Power, bandwidth, hardware, photos, prompts and ideas.</p></li>
+    <li style="--c: var(--do)"><span class="k">Process</span><h3>What runs</h3><p>Two virtualisation hosts and a GPU node running self-hosted services.</p></li>
+    <li style="--c: var(--check)"><span class="k">Output</span><h3>What comes out</h3><p>Backups, uptime, AI renders and 3D-printed fixes, measured.</p></li>
+    <li style="--c: var(--act)"><span class="k">Improve</span><h3>What we learn</h3><p>Every failure becomes a PDCA cycle: symptom, hypothesis, test, countermeasure.</p></li>
+  </ol>
+
+  <h2>The lab as a SIPOC</h2>
+  <p class="note">Suppliers → Inputs → Process → Outputs → Customers. The same map with live numbers on the arrows is on <a href="/flow/">Flow</a>.</p>
+  <div id="sipoc" class="sipoc-wrap">
+    <noscript><p>Suppliers: CFE power, internet provider, hardware vendors, open source. Inputs: kWh, bandwidth, photos and documents, prompts, ideas. Process: two Proxmox hosts, one GPU AI node, about 40 self-hosted apps, PDCA on failures. Outputs: backups, AI renders, uptime, 3D-printed fixes. Customers: family, consulting clients, the builder.</p></noscript>
+  </div>
+
+  <h2>Eight honest numbers</h2>
+  <div class="grid three">
+    <div class="card"><h3>Uptime &amp; backups</h3><p class="note">30-day uptime of the core services and the run of days with every nightly backup green.</p></div>
+    <div class="card"><h3>AI renders</h3><p class="note">Images per day across the local GPU mesh, and the median seconds each one takes.</p></div>
+    <div class="card"><h3>PDCA cycles</h3><p class="note">Recorded improvement cycles: each failure written down, tested and closed.</p></div>
+    <div class="card"><h3>Ideas</h3><p class="note">Ideas captured per week. Counted, never published.</p></div>
+    <div class="card"><h3>3D-printed fixes</h3><p class="note">Problems solved with a printer instead of a purchase, and the money it saved.</p></div>
+    <div class="card"><h3>Make vs buy</h3><p class="note">Hours from order to part in hand when printed at home, against about three weeks plus 33.5 % import duty when bought from China. <a href="/tools/make-or-buy/">Calculator</a>.</p></div>
+    <div class="card"><h3>Right First Time</h3><p class="note">How many printed parts come out right on the first attempt, and the reprints it took.</p></div>
+    <div class="card"><h3>Cost of Poor Quality</h3><p class="note">What failed prints cost: scrapped filament and the power they burned, plus the printer hours lost.</p></div>
+    <div class="card"><h3>Only aggregates</h3><p class="note">No hostnames, addresses or hourly patterns leave the lab. The lab pushes a whitelisted snapshot; nothing on the internet can reach in.</p></div>
+  </div>
+  <p><a class="btn" href="/kpi/">See the KPI board</a></p>
+
+  <h2>From the plant floor</h2>
+  <p class="note">The same lean method, first used in a bakery in New York where I was plant manager.</p>
+  <div class="grid two">
+    <div class="card"><h3>Bakery capacity calculator</h3><p class="note">Explode an order backwards into trays, batter drums, oven batches, trolleys and people per area. Find the bottleneck and the earliest ship date. Illustrative numbers, all editable.</p><p><a href="/tools/capacity/">Open the calculator</a></p></div>
+    <div class="card"><h3>Three stories</h3><p class="note">90 trolleys in front of a 75-tray cutter, a FIFO cooling lane, and 5S at −28 °C that grew a freezer warehouse from 200 to 300 pallet positions.</p><p><a href="/cases/bakery/">Read the stories</a></p></div>
+  </div>
+
+  <div class="cta">
+    <h2>Read the stories, or bring the method to your plant</h2>
+    <p class="note">The how and why live on kaizen-lab.dev. The same lean approach, applied to manufacturing and IoT, is what Zenilify Consulting does.</p>
+    <a class="btn" href="https://kaizen-lab.dev">kaizen-lab.dev</a><a class="btn ghost" href="https://zenilify-consulting.com">zenilify-consulting.com</a>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+  <span>Kaizen Lab · small improvements, measured.</span>
+  <span><a href="https://kaizen-lab.dev">kaizen-lab.dev</a> · <a href="https://zenilify-consulting.com">Zenilify Consulting</a></span>
+</div></footer>
+<script src="/assets/sipoc.js?v=20261014a"></script>
+<script>document.addEventListener('DOMContentLoaded', function () { KL.sipoc(document.getElementById('sipoc'), null); });</script>
+</body>
+</html>

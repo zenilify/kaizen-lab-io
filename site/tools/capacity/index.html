@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bakery Capacity Calculator</title>
+<meta name="description" content="Bakery capacity and resource calculator: explode an order backwards into trays, batter drums, oven batches, trolleys, freezer slots and people per area, find the bottleneck and the earliest ship date. Runs in your browser.">
+<meta property="og:title" content="Bakery capacity &amp; resource calculator">
+<meta property="og:description" content="Take the traffic out of the factory: what an order really needs, per area, in each area's own units.">
+<meta property="og:url" content="https://kaizen-lab.io/tools/capacity/">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/style.css?v=20261014a">
+<script src="/assets/app.js?v=20261014a"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/" aria-label="Kaizen Lab I/O, home"><img src="/assets/logo.png" alt="Kaizen Lab" width="168" height="22"><span class="io">.io</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="/">Home</a><a href="/kpi/">KPIs</a><a href="/flow/">Flow</a><a href="/tools/oee/">OEE</a><a href="/tools/takt/">Takt</a><a href="/tools/capacity/" aria-current="page">Capacity</a><a href="/cases/bakery/">Cases</a>
+  </nav>
+  <button class="theme-btn" type="button">Theme: auto</button>
+</div></header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">Lean tool · from the plant floor</p>
+  <h1>Bakery capacity &amp; resource calculator</h1>
+  <p class="lede">Start from the order and work backwards: boxes become pieces, pieces become trays, trays become batter, batter becomes drums, and every area gets its need in its own unit, with the people and hours it takes. The slowest area sets the earliest ship date, not a fixed lead time.</p>
+  <p class="note"><strong>Every number below is an illustrative default</strong> that keeps the structure of a real bakery, not anyone's data. Change any input; everything is calculated in your browser and nothing is sent anywhere. The story behind the model is on <a href="/cases/bakery/">From the plant floor</a>.</p>
+  <p><a class="btn small ghost" href="#cap-out">Jump to the results</a></p>
+
+  <form id="capacity" novalidate>
+    <fieldset><legend>Order</legend>
+      <p class="note" style="margin-top:0">Enter boxes, or pallets (the MOQ is in pallets). The six SKUs are examples; rename and reshape them under <em>SKU master</em>.</p>
+      <div id="order-rows"></div>
+      <button type="button" class="btn small" id="add-line">Add order line</button>
+      <button type="button" class="btn small ghost" id="reset">Reset all defaults</button>
+    </fieldset>
+    <div id="policy"></div>
+    <details class="more"><summary>Resources and rates (mixers, lines, ovens, trolleys, freezer, packaging, costs)</summary><div class="inner" id="resources"></div></details>
+    <details class="more"><summary>SKU master (pack config, trays, batter, routing)</summary><div class="inner" id="skus"></div></details>
+  </form>
+  <p class="err" id="cap-err" role="alert"></p>
+
+  <section id="cap-out" aria-labelledby="out-title">
+    <h2 id="out-title">What this order really needs</h2>
+    <div class="grid four" aria-live="polite">
+      <div class="card stat"><span class="label">Bottleneck</span><span class="value sm" id="s-bn">–</span><span class="sub" id="s-bn-sub"></span></div>
+      <div class="card stat"><span class="label">Earliest ship date</span><span class="value sm" id="s-ship">–</span><span class="sub" id="s-ship-sub"></span></div>
+      <div class="card stat"><span class="label">Trolleys in rotation</span><span class="value sm" id="s-trol">–</span><span class="sub" id="s-trol-sub"></span></div>
+      <div class="card stat"><span class="label">Takt</span><span class="value sm" id="s-takt">–</span><span class="sub" id="s-takt-sub"></span></div>
+    </div>
+
+    <h3 class="sec">Per area, in each area's own unit</h3>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Areas table, scrolls sideways">
+      <table class="plain areas">
+        <thead><tr><th scope="col">Area</th><th scope="col">Need (own unit)</th><th scope="col" class="n">Hours</th><th scope="col" class="n">Days</th><th scope="col" class="n">People / shift</th><th scope="col">In rotation</th><th scope="col">Load</th></tr></thead>
+        <tbody id="areas"></tbody>
+      </table>
+    </div>
+    <p class="note" id="people"></p>
+
+    <h3 class="sec">Waste flags</h3>
+    <ul class="flags" id="flags"></ul>
+
+    <h3 class="sec">WIP: why 90 trolleys in front of a 75-tray cutter help nobody</h3>
+    <div id="wip"></div>
+
+    <h3 class="sec">The backward explosion, per SKU</h3>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Explosion table, scrolls sideways">
+      <table class="plain">
+        <thead><tr><th scope="col">SKU</th><th scope="col" class="n">Boxes</th><th scope="col" class="n">Pallets</th><th scope="col" class="n">Pieces</th><th scope="col" class="n">Items</th><th scope="col" class="n">Trays net → +loss</th><th scope="col" class="n">Batter lb</th><th scope="col" class="n">Oven batches</th><th scope="col" class="n">Trolley loads</th></tr></thead>
+        <tbody id="explode"></tbody>
+      </table>
+    </div>
+    <p class="note" id="drums"></p>
+
+    <h3 class="sec">COPQ: the broken ultrasonic knife</h3>
+    <div id="knife"></div>
+
+    <details class="more" style="margin-top:20px"><summary>How it calculates (Lean terms)</summary><div class="inner">
+      <ul>
+        <li><strong>Backward explosion:</strong> boxes × pack config = pieces → items (slabs, cakes, minis) → trays, rounded up, plus the production loss → batter oz → lb → whole drums per batter type.</li>
+        <li><strong>Hours per area</strong> = units × time per unit with that area's standard crew; parallel resources (mixers, ovens, lines) share the load. Days = hours ÷ net hours per day (shifts × (shift − breaks)). The freezer runs 24 h.</li>
+        <li><strong>Bottleneck (TOC):</strong> the area with the most days of work. It sets the pace; everything else is subordinated to it.</li>
+        <li><strong>Takt vs cycle:</strong> takt = available time in the window ÷ trays ordered; if the bottleneck's cycle per tray is longer, the window is too short.</li>
+        <li><strong>Earliest ship date (capable-to-promise):</strong> bottleneck days + one tray's flow time + freezing (12 h ≈ 0.5 day) + QA release, counted in working days.</li>
+        <li><strong>WIP cap:</strong> trolleys per flow = slowest-step rate × loop time ÷ trays per trolley, + 1 buffer (Little's law). Without the cap, filling pushes until the trolleys run out and they queue in the FIFO cooling lane; past the maximum dwell they are scrap (COPQ).</li>
+        <li><strong>Pull vs push:</strong> pull gives mixing one signal per drum, so about two drums per running line are in rotation and batter stays fresh; push fills every drum ahead.</li>
+        <li><strong>Heijunka:</strong> the brownie packaging line runs either IWP or clams; more, smaller campaigns level the mix at the cost of changeovers.</li>
+      </ul>
+    </div></details>
+  </section>
+
+  <div class="cta">
+    <h2>Want this for your plant?</h2>
+    <p class="note">Zenilify Consulting builds this backward explosion with your own SKUs, routings and rates, finds the real constraint and sets the WIP caps and pull signals around it.</p>
+    <a class="btn" href="https://zenilify-consulting.com">Book a diagnostic call</a><a class="btn ghost" href="/cases/bakery/">Read the plant-floor stories</a>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+  <span>Kaizen Lab · small improvements, measured.</span>
+  <span><a href="https://kaizen-lab.dev">kaizen-lab.dev</a> · <a href="https://zenilify-consulting.com">Zenilify Consulting</a></span>
+</div></footer>
+<script src="/assets/capacity.js?v=20261014a"></script>
+</body>
+</html>

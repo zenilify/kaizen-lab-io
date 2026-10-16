@@ -1,0 +1,75 @@
+# Build + privacy gate + deploy dist/ to the EXISTING Direct Upload Cloudflare Pages project `kaizen-lab-io`.
+#   push to main / manual run on main  -> production (kaizen-lab.io)
+#   manual run on any other branch      -> preview  https://<branch>.kaizen-lab-io.pages.dev
+# Secrets (referenced by name only; values live in GitHub, never in this repo):
+#   CLOUDFLARE_API_TOKEN    token scoped to Account > Cloudflare Pages: Edit (nothing else)
+#   CLOUDFLARE_ACCOUNT_ID   the Cloudflare account id
+#   KL_PRIVATE_PATTERNS     optional: extra ERE for the privacy gate
+# Until both Cloudflare secrets exist the deploy job is SKIPPED (not failed); build + gate still run.
+name: deploy
+on:
+  push:
+    branches: [main]
+    paths: ["site/**", "functions/**", "data/*.json", "tools/build.sh", ".github/workflows/deploy.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      ready: ${{ steps.ready.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build + privacy gate
+        env:
+          KL_PRIVATE_PATTERNS: ${{ secrets.KL_PRIVATE_PATTERNS }}
+        run: tools/build.sh
+      - name: Deploy secrets present?
+        id: ready
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+          HAS_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_TOKEN" = true ] && [ "$HAS_ACCOUNT" = true ]; then r=true; else r=false
+            echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set - deploy job skipped"; fi
+          echo "ready=$r" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 3
+  deploy:
+    needs: build
+    if: ${{ needs.build.outputs.ready == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Pages branch
+        id: br
+        env:
+          REF: ${{ github.ref_name }}
+        run: |
+          if [ "$REF" = main ]; then b=main; else
+            b=$(printf '%s' "$REF" | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g' | cut -c1-28); fi
+          echo "name=$b" >> "$GITHUB_OUTPUT"
+      - name: Deploy (wrangler@3 pages deploy; token via env only)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BRANCH: ${{ steps.br.outputs.name }}
+        run: |
+          npx --yes wrangler@3 pages deploy dist --project-name kaizen-lab-io --branch "$BRANCH" \
+            --commit-hash "$GITHUB_SHA" --commit-dirty=true

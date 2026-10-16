@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Make or Buy Calculator</title>
+<meta name="description" content="Make or buy a small part? Compare 3D printing at home (filament, power, reprints, days) with buying from China (price, shipping, 33.5 % import duty, ~3 weeks). Runs in your browser.">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/style.css?v=20261014a">
+<script src="/assets/app.js?v=20261014a"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/" aria-label="Kaizen Lab I/O, home"><img src="/assets/logo.png" alt="Kaizen Lab" width="168" height="22"><span class="io">.io</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="/">Home</a><a href="/kpi/">KPIs</a><a href="/flow/">Flow</a><a href="/tools/oee/">OEE</a><a href="/tools/takt/">Takt</a><a href="/tools/capacity/">Capacity</a><a href="/cases/bakery/">Cases</a>
+  </nav>
+  <button class="theme-btn" type="button">Theme: auto</button>
+</div></header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">Lean tool</p>
+  <h1>Make or buy: print it or order it?</h1>
+  <p class="lede">A small part can be printed at home in a day or two, or ordered from China and wait about three weeks, plus Mexico's 33.5 % duty on parcels from countries without a trade agreement. Put in your numbers; everything is calculated in your browser.</p>
+
+  <div class="calc">
+    <form id="mob" novalidate>
+      <fieldset><legend>Buy</legend>
+        <div class="field"><label for="price">Price of the part (MXN)</label><input id="price" type="number" min="0" step="any" inputmode="decimal" value="250"></div>
+        <div class="field"><label for="ship">Shipping (MXN)</label><input id="ship" type="number" min="0" step="any" inputmode="decimal" value="0"></div>
+        <div class="field"><label for="tax">Import duty (%)</label><span class="hint" id="h-tax">33.5 % on parcels from non-treaty countries; 0 for a domestic purchase.</span><input id="tax" type="number" min="0" step="any" inputmode="decimal" value="33.5" aria-describedby="h-tax"></div>
+        <div class="field"><label for="bdays">Days from order to part in hand</label><input id="bdays" type="number" min="0" step="any" inputmode="decimal" value="21"></div>
+      </fieldset>
+      <fieldset><legend>Make (3D print)</legend>
+        <div class="field"><label for="grams">Filament per attempt (g)</label><span class="hint" id="h-g">From the slicer.</span><input id="grams" type="number" min="0" step="any" inputmode="decimal" value="130" aria-describedby="h-g"></div>
+        <div class="field"><label for="kg">Filament price (MXN per kg)</label><input id="kg" type="number" min="0" step="any" inputmode="decimal" value="260"></div>
+        <div class="field"><label for="hours">Print time per attempt (h)</label><input id="hours" type="number" min="0" step="any" inputmode="decimal" value="4"></div>
+        <div class="field"><label for="watts">Printer average power (W)</label><input id="watts" type="number" min="0" step="any" inputmode="decimal" value="150"></div>
+        <div class="field"><label for="kwh">Electricity (MXN per kWh)</label><input id="kwh" type="number" min="0" step="any" inputmode="decimal" value="1.6"></div>
+        <div class="field"><label for="rft">Expected Right First Time (%)</label><span class="hint" id="h-rft">Share of prints that come out right on the first attempt. 80 % = 1.25 attempts per good part; the extra is your Cost of Poor Quality.</span><input id="rft" type="number" min="1" max="100" step="any" inputmode="decimal" value="80" aria-describedby="h-rft"></div>
+        <div class="field"><label for="mdays">Days from order to part in hand</label><span class="hint" id="h-md">Design/render + print + reprints.</span><input id="mdays" type="number" min="0" step="any" inputmode="decimal" value="2" aria-describedby="h-md"></div>
+      </fieldset>
+    </form>
+
+    <section class="card result" aria-labelledby="r-title" aria-live="polite">
+      <h2 id="r-title" style="margin-top:0">Result</h2>
+      <div class="big" id="o-saved">–</div>
+      <div class="note">MXN saved by printing (negative = buying is cheaper)</div>
+      <table class="plain" style="margin-top:16px">
+        <tbody>
+          <tr><td>Landed cost to buy (price + shipping) × (1 + duty)</td><td class="n" id="o-landed">–</td></tr>
+          <tr><td>Cost to make (filament + power, all attempts)</td><td class="n" id="o-make">–</td></tr>
+          <tr><td>of which Cost of Poor Quality (expected scrap)</td><td class="n" id="o-copq">–</td></tr>
+          <tr><td>Days saved by printing</td><td class="n" id="o-days">–</td></tr>
+          <tr><td>Break-even attempts (when printing stops paying)</td><td class="n" id="o-break">–</td></tr>
+        </tbody>
+      </table>
+      <p class="note" id="mob-verdict"></p>
+      <p class="err" id="mob-err" role="alert"></p>
+    </section>
+  </div>
+
+  <p class="note">The same formula runs on this lab's own prints: <a href="/kpi/">Make vs buy and first-pass yield on the KPI board →</a></p>
+
+  <div class="cta">
+    <h2>Make-or-buy decisions on a real line?</h2>
+    <p class="note">Lead time, landed cost and rework decide in-house vs outsourced parts. Zenilify Consulting builds that comparison with your data and your quality numbers.</p>
+    <a class="btn" href="https://zenilify-consulting.com">Book a diagnostic call at zenilify-consulting.com</a>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+  <span>Kaizen Lab · small improvements, measured.</span>
+  <span><a href="https://kaizen-lab.dev">kaizen-lab.dev</a> · <a href="https://zenilify-consulting.com">Zenilify Consulting</a></span>
+</div></footer>
+<script src="/assets/makebuy.js?v=20261014a"></script>
+</body>
+</html>

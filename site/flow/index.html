@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaizen Lab Flow</title>
+<meta name="description" content="Kaizen Lab as a value stream: the SIPOC map of the home lab with a live number on each arrow.">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/style.css?v=20261014a">
+<script src="/assets/app.js?v=20261014a"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/" aria-label="Kaizen Lab I/O, home"><img src="/assets/logo.png" alt="Kaizen Lab" width="168" height="22"><span class="io">.io</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="/">Home</a><a href="/kpi/">KPIs</a><a href="/flow/" aria-current="page">Flow</a><a href="/tools/oee/">OEE</a><a href="/tools/takt/">Takt</a><a href="/tools/capacity/">Capacity</a><a href="/cases/bakery/">Cases</a>
+  </nav>
+  <button class="theme-btn" type="button">Theme: auto</button>
+</div></header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">Value stream</p>
+  <h1>The lab as a flow.</h1>
+  <p class="lede">Suppliers feed inputs into a process; the process delivers outputs to customers. Each arrow carries the number that tells whether that step is healthy.</p>
+  <p class="status-line" id="status" aria-live="polite">Loading measurements…</p>
+  <div id="sipoc" class="sipoc-wrap"></div>
+
+  <h2>Reading the arrows</h2>
+  <div class="grid two">
+    <div class="card"><h3>Suppliers → Inputs</h3><p class="note">Ideas raised since July 2026 and how many reached production: the raw material for every improvement, and how much of it turns into something that works. First count, under review.</p></div>
+    <div class="card"><h3>Inputs → Process</h3><p class="note">PDCA cycles recorded: each one is a failure turned into a standard.</p></div>
+    <div class="card"><h3>Process → Outputs</h3><p class="note">30-day uptime of the core services: is the process available? And for 3D-printed parts: hours from the order to the part in hand, against ~3 weeks to buy it from China plus the 33.5 % import duty (<a href="/tools/make-or-buy/">calculator</a>).</p></div>
+    <div class="card"><h3>Outputs → Customers</h3><p class="note">Renders delivered in 7 days and the run of days with every backup green.</p></div>
+  </div>
+  <p><a href="/kpi/">All five KPIs with targets and trends →</a></p>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+  <span>Kaizen Lab · small improvements, measured.</span>
+  <span><a href="https://kaizen-lab.dev">kaizen-lab.dev</a> · <a href="https://zenilify-consulting.com">Zenilify Consulting</a></span>
+</div></footer>
+<script src="/assets/sipoc.js?v=20261014a"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var box = document.getElementById('sipoc');
+  KL.sipoc(box, null);
+  Promise.all([KL.loadMetrics(), KL.getJSON('/data/ideas.json').catch(function () { return {}; })]).then(function (a) {
+    var res = a[0];
+    KL.statusLine(document.getElementById('status'), res);
+    if (res.data) KL.sipoc(box, res.data, a[1]);
+  });
+});
+</script>
+</body>
+</html>
