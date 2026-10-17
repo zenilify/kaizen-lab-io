@@ -2,6 +2,7 @@
 (function () {
   'use strict';
   var KL = window.KL = {};
+  document.documentElement.classList.add('js');
   var THEMES = ['auto', 'light', 'dark'];
 
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
@@ -20,6 +21,26 @@
       cur = THEMES[(THEMES.indexOf(cur) + 1) % THEMES.length];
       store('kl-theme', cur); applyTheme(cur);
     });
+  });
+
+  /* Tools dropdown: button + aria-expanded, Esc / outside click / focus-out close, arrow keys move. */
+  document.addEventListener('DOMContentLoaded', function () {
+    var dd = document.querySelector('.nav-dd'); if (!dd) return;
+    var btn = dd.querySelector('.nav-dd-btn'), links = dd.querySelectorAll('.nav-dd-menu a');
+    function set(open, focusFirst) {
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open && focusFirst && links[0]) links[0].focus();
+    }
+    btn.addEventListener('click', function () { set(btn.getAttribute('aria-expanded') !== 'true'); });
+    btn.addEventListener('keydown', function (e) { if (e.key === 'ArrowDown') { e.preventDefault(); set(true, true); } });
+    dd.addEventListener('keydown', function (e) {
+      var i = Array.prototype.indexOf.call(links, document.activeElement);
+      if (e.key === 'Escape') { set(false); btn.focus(); }
+      else if (e.key === 'ArrowDown' && i >= 0) { e.preventDefault(); links[(i + 1) % links.length].focus(); }
+      else if (e.key === 'ArrowUp' && i >= 0) { e.preventDefault(); if (i === 0) btn.focus(); else links[i - 1].focus(); }
+    });
+    dd.addEventListener('focusout', function (e) { if (!dd.contains(e.relatedTarget)) set(false); });
+    document.addEventListener('click', function (e) { if (!dd.contains(e.target)) set(false); });
   });
 
   function getJSON(url) {
@@ -44,8 +65,9 @@
     return Promise.all([
       getJSON('/data/targets.json').catch(function () { return {}; }),
       getJSON('/data/3d-savings.json').catch(function () { return { entries: [] }; }),
-      getJSON('/data/ideas.json').catch(function () { return {}; })
-    ]).then(function (a) { return { targets: a[0], prints: a[1], ideas: a[2] }; });
+      getJSON('/data/ideas.json').catch(function () { return {}; }),
+      getJSON('/data/stories.json').catch(function () { return {}; })
+    ]).then(function (a) { return { targets: a[0], prints: a[1], ideas: a[2], stories: (a[3] && a[3].tiles) || {} }; });
   };
   /* Idea funnel: the live feed when it carries the ledger aggregate, else the copy bundled at deploy time. */
   KL.ideaFunnel = function (live, bundled) {

@@ -3,6 +3,36 @@
   'use strict';
   var KL = window.KL, n = KL.num, esc = KL.esc;
 
+  /* Language: EN default; ?lang=es or the remembered choice (localStorage, try/catch) switches KPI labels, chips and verdicts to ES.
+     The measurement detail lines stay in English. Same pattern as zenilify-consulting.com/erick/. */
+  var ES = {
+    'Uptime & backups': 'Disponibilidad y respaldos', 'AI renders': 'Renders de IA', 'PDCA cycles': 'Ciclos PDCA',
+    'Ideas → implemented': 'Ideas → implementadas', '3D-printed fixes': 'Soluciones impresas en 3D', 'Make vs buy (3D)': 'Fabricar vs comprar (3D)',
+    'RFT — Right First Time': 'RFT — Bien a la primera', 'COPQ — Cost of Poor Quality': 'COPQ — Costo de mala calidad',
+    'Plan': 'Planear', 'Do': 'Hacer', 'Check': 'Verificar', 'Act': 'Actuar', 'Plan → Do': 'Planear → Hacer',
+    'on target': 'en la meta', 'close': 'cerca', 'below target': 'bajo la meta', 'no data': 'sin datos', 'baseline': 'línea base', 'pricing pending': 'precio pendiente',
+    'target': 'meta', 'Read the story': 'Leer la historia'
+  };
+  var lang = 'en';
+  function T9(k) { return lang === 'es' && ES[k] ? ES[k] : k; }
+  KL.initLang = function () {
+    var q = (location.search.match(/[?&]lang=(en|es)/) || [])[1], s = null;
+    try { s = localStorage.getItem('kl-lang'); } catch (e) {}
+    lang = q || (s === 'es' || s === 'en' ? s : 'en');
+    return lang;
+  };
+  KL.setLang = function (l) {
+    lang = l === 'es' ? 'es' : 'en';
+    try { localStorage.setItem('kl-lang', lang); } catch (e) {}
+    document.documentElement.lang = lang === 'es' ? 'es-MX' : 'en';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang)); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-es]'), function (el) {
+      if (!el.hasAttribute('data-en')) el.setAttribute('data-en', el.textContent);
+      el.textContent = lang === 'es' ? el.getAttribute('data-es') : el.getAttribute('data-en');
+    });
+    if (KL._rerender) KL._rerender();
+  };
+
   function spark(points, opts) {
     // points: [{label, v}] ; opts: {kind:'bar'|'line', target, min, max, unit}
     var W = 300, H = 48, pad = 2;
@@ -49,25 +79,32 @@
     var bad = days.filter(function (d) { return !d.ok; }).length;
     return '<svg class="spark" style="height:14px" viewBox="0 0 ' + W + ' 14" preserveAspectRatio="none" role="img" aria-label="Backups, last ' + days.length + ' days: ' + (days.length - bad) + ' green, ' + bad + ' with a missed or failed job"></svg>'.replace('</svg>', cells + '</svg>') + '<span class="note" style="font-size:12px">backups, last ' + days.length + ' days</span>';
   }
-  function pill(state, text) { return '<span class="pill ' + state + '">' + esc(text) + '</span>'; }
+  function pill(state, text) { return '<span class="pill ' + state + '">' + esc(T9(text)) + '</span>'; }
   function judge(v, target, higherIsBetter, nearAbs) {
     if (typeof v !== 'number' || typeof target !== 'number') return pill('na', 'no data');
     var ok = higherIsBetter ? v >= target : v <= target;
     var near = nearAbs !== undefined ? Math.abs(v - target) <= nearAbs : higherIsBetter ? v >= target * 0.9 : v <= target * 1.25;
     return ok ? pill('ok', 'on target') : near ? pill('warn', 'close') : pill('bad', 'below target');
   }
+  var STORIES = {};
+  function storyLink(id) {
+    var s = STORIES[id];
+    return s && /^https:\/\//.test(s.url || '') ? '<a class="story-link" href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(T9('Read the story')) + ' <span aria-hidden="true">↗</span></a>' : '';
+  }
   function tile(o) {
     return '<article class="card tile" aria-labelledby="t-' + o.id + '">' +
-      '<span class="label" id="t-' + o.id + '">' + esc(o.label) + ' <span class="pdca-chip">' + esc(o.pdca) + '</span></span>' +
+      '<span class="label" id="t-' + o.id + '">' + esc(T9(o.label)) + ' <span class="pdca-chip">' + esc(T9(o.pdca)) + '</span></span>' +
       '<div class="value">' + o.value + (o.unit ? '<span class="unit">' + esc(o.unit) + '</span>' : '') + '</div>' +
       '<div class="sub">' + o.sub + '</div>' +
-      '<div class="target">' + o.judge + ' <span class="note">target ' + esc(o.target) + '</span></div>' +
-      o.spark + (o.extra || '') + (o.stale ? '<div class="note">' + esc(o.stale) + '</div>' : '') + '</article>';
+      '<div class="target">' + o.judge + ' <span class="note">' + T9('target') + ' ' + esc(o.target) + '</span></div>' +
+      o.spark + (o.extra || '') + (o.stale ? '<div class="note">' + esc(o.stale) + '</div>' : '') + storyLink(o.id) + '</article>';
   }
   function lastN(arr, k) { arr = Array.isArray(arr) ? arr : []; return arr.slice(Math.max(0, arr.length - k)); }
   function staleNote(x) { return x && x.status && x.status !== 'ok' ? (x.status === 'stale' ? 'Source unreachable on the last run; showing the last measured value.' : 'Source unavailable; value unknown.') : ''; }
 
   KL.renderKPIs = function (box, metrics, stat) {
+    STORIES = (stat && stat.stories) || {};
+    KL._rerender = function () { KL.renderKPIs(box, metrics, stat); };
     var k = (metrics && metrics.kpis) || {}, T = stat.targets || {};
     var up = k.uptime || {}, bk = k.backups || {}, r = k.renders || {}, p = k.pdca || {}, id = k.ideas || {};
     var html = '';
@@ -206,10 +243,10 @@
     var titles = (d.public_titles_implemented || []).slice(0, 5);
     var caps = lastN(live && live.captures_per_week, 8).reduce(function (s, t) { return s + (t.n || 0); }, 0);
     var html = '<article class="card tile wide" aria-labelledby="t-idea">' +
-      '<span class="label" id="t-idea">Ideas → implemented <span class="pdca-chip">Plan → Do</span>' + review + '</span>' +
+      '<span class="label" id="t-idea">' + esc(T9('Ideas → implemented')) + ' <span class="pdca-chip">' + esc(T9('Plan → Do')) + '</span>' + review + '</span>' +
       '<div class="value">' + n(d.implemented) + '<span class="unit">of ' + n(total) + ' ideas implemented</span></div>' +
       '<div class="sub"><strong>' + n(rate, 1) + '%</strong> implementation rate since July 2026 · ' + n(d.in_progress) + ' in progress · ' + n(d.parked) + ' parked · ' + n(d.dropped) + ' dropped</div>' +
-      '<div class="target">' + judge(rate, T.implementation_rate_pct, true) + ' <span class="note">target ≥ ' + n(T.implementation_rate_pct) + '%' + (T.implementation_rate_proposal ? ' (proposed)' : '') + '</span></div>' +
+      '<div class="target">' + judge(rate, T.implementation_rate_pct, true) + ' <span class="note">' + T9('target') + ' ≥ ' + n(T.implementation_rate_pct) + '%' + (T.implementation_rate_proposal ? ' (proposed)' : '') + '</span></div>' +
       '<div class="idea-grid">' +
         '<section><h3 class="mini">Funnel</h3><div class="bars">' +
           funnelRow('Raised', total, total, 'muted') + funnelRow('In progress', d.in_progress, total) +
@@ -222,7 +259,7 @@
       (live && live.captures_per_week ? ' Quick captures in the last 8 weeks: ' + n(caps) + '.' : '') + '</div>' +
       (f.src === 'bundled' ? '<div class="note">Showing the copy bundled with the site; the live feed has not carried the funnel yet.</div>' : '') +
       (f.src === 'live' && staleNote(live) ? '<div class="note">' + esc(staleNote(live)) + '</div>' : '') +
-      '</article>';
+      storyLink('idea') + '</article>';
     return html;
   }
 })();
