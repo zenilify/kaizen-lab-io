@@ -13,6 +13,19 @@
     'on target': 'en la meta', 'close': 'cerca', 'below target': 'bajo la meta', 'no data': 'sin datos', 'baseline': 'línea base', 'pricing pending': 'precio pendiente',
     'target': 'meta', 'Read the story': 'Leer la historia'
   };
+  var WHY = {
+    en: { h: 'Why it matters', p: 'In Lean, the eighth waste is unused talent: the skills and ideas of the people who face the problems every day. That is why idea management is a focus of every Lean transformation: employees propose the solutions.',
+      l: 'Typical idea-management KPIs', k: ['Employee engagement (% participating)', 'Ideas submitted per employee', 'Total ideas', 'Ideas scoped', 'Ideas implemented', 'Savings per implemented idea'],
+      f: 'The home lab tracks the same funnel (raised → implemented) as a demonstration of running such a system.' },
+    es: { h: 'Por qué importa', p: 'En Lean, el octavo desperdicio es el talento no aprovechado: las habilidades e ideas de las personas que enfrentan los problemas todos los días. Por eso la gestión de ideas es un foco de toda transformación Lean: los colaboradores proponen las soluciones.',
+      l: 'KPIs típicos de gestión de ideas', k: ['Participación de los colaboradores (% que participa)', 'Ideas enviadas por colaborador', 'Total de ideas', 'Ideas evaluadas y dimensionadas', 'Ideas implementadas', 'Ahorro por idea implementada'],
+      f: 'El laboratorio mide el mismo embudo (planteadas → implementadas) como demostración de cómo operar un sistema así.' }
+  };
+  function whyNote() {
+    var w = WHY[lang === 'es' ? 'es' : 'en'];
+    return '<details class="why"><summary>' + esc(w.h) + '</summary><div><p>' + esc(w.p) + '</p><p><strong>' + esc(w.l) + '</strong></p><ul>' +
+      w.k.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul><p>' + esc(w.f) + '</p></div></details>';
+  }
   var lang = 'en';
   function T9(k) { return lang === 'es' && ES[k] ? ES[k] : k; }
   KL.initLang = function () {
@@ -259,7 +272,7 @@
       (live && live.captures_per_week ? ' Quick captures in the last 8 weeks: ' + n(caps) + '.' : '') + '</div>' +
       (f.src === 'bundled' ? '<div class="note">Showing the copy bundled with the site; the live feed has not carried the funnel yet.</div>' : '') +
       (f.src === 'live' && staleNote(live) ? '<div class="note">' + esc(staleNote(live)) + '</div>' : '') +
-      storyLink('idea') + '</article>';
+      whyNote() + storyLink('idea') + '</article>';
     return html;
   }
 })();

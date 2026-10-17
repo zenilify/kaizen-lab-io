@@ -294,3 +294,14 @@ table.plain tr.bn th, table.plain tr.bn td { background: color-mix(in srgb, var(
 .lang button { font: inherit; font-weight: 700; color: var(--text); background: none; border: 1px solid var(--line); border-radius: 6px; padding: 3px 10px; cursor: pointer; }
 .lang button[aria-pressed="true"] { background: var(--navy); color: #F6F4EF; border-color: var(--navy); }
 .story-link { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600; }
+
+@media (max-width: 640px) {
+  .zx-in { flex-wrap: wrap; overflow-x: visible; gap: 0 4px; }
+  .zx a { padding: 9px 8px; }
+  .zx .zx-ext { margin-left: 0; flex-basis: 100%; border-top: 1px solid #2A3778; }
+}
+details.why { margin: 12px 0 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+details.why > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; font-size: 14px; }
+details.why > div { padding: 0 14px 10px; font-size: 14px; }
+details.why p { margin: 6px 0; }
+details.why ul { margin: 4px 0 8px; padding-left: 20px; }

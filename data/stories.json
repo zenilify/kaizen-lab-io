@@ -1,4 +1,7 @@
 {
-  "_note": "KPI tile id -> Medium article. Add an entry only when an article about that KPI exists and returns 200. Tile ids: up, ai, pdca, print, mvb, rft, copq, idea.",
-  "tiles": {}
+  "_note": "KPI tile id -> Medium article. Add an entry only when an article about that KPI exists. Tile ids: up, ai, pdca, print, mvb, rft, copq, idea. (medium.com answers 403 to bots; the article is listed in the author's RSS feed.)",
+  "tiles": {
+    "pdca": {"url": "https://medium.com/the-repo/one-knob-to-rule-the-studio-turning-a-52-16-pixel-clock-into-a-home-lab-cockpit-the-ulanzi-tc002-cb2c7241b098"},
+    "idea": {"url": "https://medium.com/the-repo/one-knob-to-rule-the-studio-turning-a-52-16-pixel-clock-into-a-home-lab-cockpit-the-ulanzi-tc002-cb2c7241b098"}
+  }
 }
