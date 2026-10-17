@@ -1,0 +1,4 @@
+{
+  "_note": "KPI tile id -> Medium article. Add an entry only when an article about that KPI exists and returns 200. Tile ids: up, ai, pdca, print, mvb, rft, copq, idea.",
+  "tiles": {}
+}
