@@ -305,3 +305,12 @@ details.why > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; f
 details.why > div { padding: 0 14px 10px; font-size: 14px; }
 details.why p { margin: 6px 0; }
 details.why ul { margin: 4px 0 8px; padding-left: 20px; }
+
+/* NVIDIA Inception badge (rules: Zenilify-Consulting docs/nvidia/brand-inception-badge-guidelines.md): our logo first (left), badge never taller than our logo (both 34px, >=30px), clear space >= eye-mark. Footer is navy in both themes, so the one supplied badge file is used unchanged. */
+.zf-partner { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 24px; padding-top: 16px; border-top: 1px solid #2A3778; }
+.zf-partner .zf-plogo { height: 34px; width: auto; }
+.zf .zf-partner a.zf-badge { display: inline-block; opacity: 1; line-height: 0; padding: 0; }
+.zf-partner .zf-badge img { height: 34px; width: auto; display: block; }
+.zf-partner span { font-size: 13px; opacity: .85; }
+.zf-tm { grid-column: 1 / -1; margin: 0; opacity: .55; font-size: 11px; }
+.zf-partner + .zf-legal { border-top: 0; padding-top: 0; }
