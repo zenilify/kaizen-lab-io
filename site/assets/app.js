@@ -100,10 +100,10 @@
     var dot = document.createElement('span'); dot.className = 'dot ' + cls; dot.setAttribute('aria-hidden', 'true');
     el.appendChild(dot);
     el.appendChild(document.createTextNode(
-      d && d.updated_at ? 'Updated ' + KL.ageText(d.updated_at) + ' · ' + KL.fmtTime(d.updated_at) + ' · ' + src : 'No measurements available yet · ' + src));
+      d && d.updated_at ? 'Updated ' + KL.ageText(d.updated_at) + ', ' + KL.fmtTime(d.updated_at) + ', ' + src : 'No measurements available yet, ' + src));
   };
   KL.num = function (v, digits) {
-    if (v === null || v === undefined || v === 'unknown' || (typeof v === 'number' && isNaN(v))) return '–';
+    if (v === null || v === undefined || v === 'unknown' || (typeof v === 'number' && isNaN(v))) return "…";
     return Number(v).toLocaleString('en-US', { maximumFractionDigits: digits === undefined ? 0 : digits, minimumFractionDigits: digits || 0 });
   };
   KL.esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };

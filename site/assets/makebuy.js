@@ -1,4 +1,4 @@
-/* Make-or-buy calculator — client-side only. Same formula as the lab's Make vs Buy KPI (collector/printing.py):
+/* Make-or-buy calculator, client-side only. Same formula as the lab's Make vs Buy KPI (collector/printing.py):
    landed buy = (price + shipping) × (1 + duty/100); make = (g/1000 × MXN/kg + h × W/1000 × MXN/kWh) ÷ RFT; COPQ = make − one attempt. */
 (function () {
   'use strict';
@@ -7,7 +7,7 @@
   function out(id, t) { $(id).textContent = t; }
   function mxn(v) { return (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en-US', { maximumFractionDigits: 0 }); }
   var IDS = ['price', 'ship', 'tax', 'bdays', 'grams', 'kg', 'hours', 'watts', 'kwh', 'rft', 'mdays'];
-  function clear(msg) { ['o-saved', 'o-landed', 'o-make', 'o-copq', 'o-days', 'o-break'].forEach(function (i) { out(i, '–'); }); out('mob-verdict', ''); out('mob-err', msg || ''); }
+  function clear(msg) { ['o-saved', 'o-landed', 'o-make', 'o-copq', 'o-days', 'o-break'].forEach(function (i) { out(i, "…"); }); out('mob-verdict', ''); out('mob-err', msg || ''); }
   function calc() {
     var v = {}; IDS.forEach(function (i) { v[i] = val(i); });
     if (IDS.some(function (i) { return isNaN(v[i]); })) return clear('Use numbers only.');
@@ -23,7 +23,7 @@
     out('o-make', 'MXN ' + mxn(make) + ' (' + mxn(perTry) + ' per attempt)');
     out('o-copq', 'MXN ' + mxn(make - perTry) + ' (' + (tries - 1).toFixed(2) + ' extra attempts per good part)');
     out('o-days', (days >= 0 ? days : '−' + Math.abs(days)) + ' days');
-    out('o-break', perTry > 0 ? (landed / perTry).toFixed(1) + ' attempts' : '–');
+    out('o-break', perTry > 0 ? (landed / perTry).toFixed(1) + ' attempts' : "…");
     out('mob-verdict', saved >= 0 && days >= 0
       ? 'Printing wins on both cost and time. Watch Right First Time: every failed attempt adds filament, hours and a day.'
       : saved >= 0 ? 'Printing is cheaper but slower: buy if the part is on the critical path.'

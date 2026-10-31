@@ -8,7 +8,7 @@
   var ES = {
     'Uptime & backups': 'Disponibilidad y respaldos', 'AI renders': 'Renders de IA', 'PDCA cycles': 'Ciclos PDCA',
     'Ideas → implemented': 'Ideas → implementadas', '3D-printed fixes': 'Soluciones impresas en 3D', 'Make vs buy (3D)': 'Fabricar vs comprar (3D)',
-    'RFT — Right First Time': 'RFT — Bien a la primera', 'COPQ — Cost of Poor Quality': 'COPQ — Costo de mala calidad',
+    'RFT: Right First Time': 'RFT: Bien a la primera', 'COPQ: Cost of Poor Quality': 'COPQ: Costo de mala calidad',
     'Plan': 'Planear', 'Do': 'Hacer', 'Check': 'Verificar', 'Act': 'Actuar', 'Plan → Do': 'Planear → Hacer',
     'on target': 'en la meta', 'close': 'cerca', 'below target': 'bajo la meta', 'no data': 'sin datos', 'baseline': 'línea base', 'pricing pending': 'precio pendiente',
     'target': 'meta', 'Read the story': 'Leer la historia'
@@ -123,25 +123,25 @@
     var html = '';
     // 1 uptime + backups
     html += tile({ id: 'up', label: 'Uptime & backups', pdca: 'Check', value: n(up.value_pct, 2), unit: '%',
-      sub: 'core services, 30 days · backup streak <strong>' + n(bk.streak_days) + '</strong> days (' + n(bk.jobs) + ' nightly jobs)',
-      judge: judge(up.value_pct, T.uptime_pct, true, 1), target: '≥ ' + n(T.uptime_pct, 1) + '% · streak ≥ ' + n(T.backup_streak_days) + ' d',
+      sub: 'core services, 30 days, backup streak <strong>' + n(bk.streak_days) + '</strong> days (' + n(bk.jobs) + ' nightly jobs)',
+      judge: judge(up.value_pct, T.uptime_pct, true, 1), target: '≥ ' + n(T.uptime_pct, 1) + '%, streak ≥ ' + n(T.backup_streak_days) + ' d',
       spark: spark(lastN(up.trend, 30).map(function (t) { return { label: t.d, v: t.pct }; }), { kind: 'line', target: T.uptime_pct, min: 80, max: 100, digits: 2, unit: '%', title: 'Daily uptime' }),
       extra: strip(lastN(bk.trend, 30)),
       stale: staleNote(up) || staleNote(bk) });
     // 2 renders
     html += tile({ id: 'ai', label: 'AI renders', pdca: 'Do', value: n(r.total_7d), unit: 'in 7 days',
-      sub: 'median <strong>' + n(r.median_s_per_image, 1) + ' s</strong> per image · ' + n(r.avg_per_day, 1) + ' per day on average',
+      sub: 'median <strong>' + n(r.median_s_per_image, 1) + ' s</strong> per image, ' + n(r.avg_per_day, 1) + ' per day on average',
       judge: judge(r.median_s_per_image, T.render_median_s, false), target: '≤ ' + n(T.render_median_s) + ' s per image',
       spark: spark(lastN(r.per_day, 7).map(function (t) { return { label: t.d, v: t.n }; }), { kind: 'bar', title: 'Renders per day' }),
       stale: staleNote(r) });
     // 3 PDCA
     var closedPct = (typeof p.closed === 'number' && typeof p.total === 'number' && p.total) ? (p.closed / (p.closed + (p.open || 0))) * 100 : null;
     html += tile({ id: 'pdca', label: 'PDCA cycles', pdca: 'Act', value: n(p.total), unit: 'recorded',
-      sub: (typeof p.closed === 'number' ? '<strong>' + n(p.closed) + '</strong> closed with a countermeasure · ' + n(p.open) + ' open or unverified' : 'closure status not published yet'),
+      sub: (typeof p.closed === 'number' ? '<strong>' + n(p.closed) + '</strong> closed with a countermeasure, ' + n(p.open) + ' open or unverified' : 'closure status not published yet'),
       judge: judge(closedPct, T.pdca_closed_pct, true), target: '≥ ' + n(T.pdca_closed_pct) + '% closed',
       spark: spark(lastN(p.per_week, 8).map(function (t) { return { label: t.w, v: t.n }; }), { kind: 'bar', title: 'New cycles per week' }),
       stale: staleNote(p) });
-    // 4 ideas: the funnel since July (ledger aggregate) — rendered as a wide tile after the other four
+    // 4 ideas: the funnel since July (ledger aggregate), rendered as a wide tile after the other four
     var ideasHtml = ideaTile(id, stat, T);
     // 5 3D prints (static ledger in the repo)
     var ent = (stat.prints && stat.prints.entries) || [];
@@ -153,59 +153,59 @@
       sub: priced.length ? 'MXN <strong>' + n(saved) + '</strong> saved (' + priced.length + ' of ' + ent.length + ' priced)' : 'savings in MXN being priced',
       judge: priced.length ? judge(saved, T.print_saving_mxn_year, true) : pill('na', 'pricing pending'), target: 'MXN ' + n(T.print_saving_mxn_year) + ' saved per year',
       spark: spark(mk.map(function (m) { return { label: m, v: months[m] }; }), { kind: 'bar', title: 'Solutions per month' }) });
-    // 6 make vs buy (3D) + 7 RFT + 8 COPQ — K1C history + the make-vs-buy ledger (lanes L100/L100b)
+    // 6 make vs buy (3D) + 7 RFT + 8 COPQ, K1C history + the make-vs-buy ledger (lanes L100/L100b)
     html += makeBuyTile(k.make_vs_buy || {}, T) + rftTile(k.rft || {}, T) + copqTile(k.copq || {}, T);
     box.innerHTML = html + ideasHtml;
   };
 
   function proposed(flag) { return flag ? ' (proposed)' : ''; }
   // lead times: 0.5 h steps below 48 h, days above (KL.lead is shared with /flow)
-  KL.lead = function (h) { return typeof h !== 'number' ? '–' : h < 48 ? n(h, h % 1 ? 1 : 0) + ' h' : n(h / 24, 1) + ' d'; };
+  KL.lead = function (h) { return typeof h !== 'number' ? "…" : h < 48 ? n(h, h % 1 ? 1 : 0) + ' h' : n(h / 24, 1) + ' d'; };
   function makeBuyTile(m, T) {
     var items = Array.isArray(m.items) ? m.items : [];
     var mxn = typeof m.mxn_saved_total === 'number'
       ? 'MXN <strong>' + n(m.mxn_saved_total) + '</strong> saved (' + n(m.priced) + ' of ' + n(m.parts) + ' priced)'
       : 'MXN saved: <strong>pending</strong> (' + n(m.pending) + ' of ' + n(m.parts) + ' parts not priced yet)';
     var list = items.length ? '<ul class="recent">' + items.map(function (it) {
-      return '<li>' + esc(it.t) + ' — <strong>' + KL.lead(it.make_h) + '</strong> (design ' + KL.lead(it.design_h) + ' · print ' + KL.lead(it.print_h) + ')' +
-        ' vs ' + n(it.buy_d) + ' d' + (typeof it.saved_mxn === 'number' ? ' · MXN ' + n(it.saved_mxn) : '') +
-        (it.attempts > 1 ? ' · ' + n(it.attempts) + ' attempts' : '') + '</li>';
+      return '<li>' + esc(it.t) + ', <strong>' + KL.lead(it.make_h) + '</strong> (design ' + KL.lead(it.design_h) + ', print ' + KL.lead(it.print_h) + ')' +
+        ' vs ' + n(it.buy_d) + ' d' + (typeof it.saved_mxn === 'number' ? ', MXN ' + n(it.saved_mxn) : '') +
+        (it.attempts > 1 ? ', ' + n(it.attempts) + ' attempts' : '') + '</li>';
     }).join('') + '</ul>' : '';
     var mh = m.median_make_h, value = typeof mh === 'number' && mh >= 48 ? n(mh / 24, 1) : n(mh, mh % 1 ? 1 : 0);
     return tile({ id: 'mvb', label: 'Make vs buy (3D)', pdca: 'Do', value: value,
       unit: (typeof mh === 'number' && mh >= 48 ? 'days' : 'hours') + ' order → part in hand (median)',
-      sub: 'vs <strong>' + n(m.median_days_buy) + ' days</strong> to buy from China + ' + n(m.import_tax_pct, 1) + ' % import tax · waiting is in design: median <strong>' +
-        KL.lead(m.median_design_h) + '</strong> design/render, ' + KL.lead(m.median_print_h) + ' print + rework · <strong>' + n(m.days_saved_total, 1) + '</strong> days saved over ' +
-        n(m.lead_known) + ' parts · ' + mxn,
+      sub: 'vs <strong>' + n(m.median_days_buy) + ' days</strong> to buy from China + ' + n(m.import_tax_pct, 1) + ' % import tax, waiting is in design: median <strong>' +
+        KL.lead(m.median_design_h) + '</strong> design/render, ' + KL.lead(m.median_print_h) + ' print + rework, <strong>' + n(m.days_saved_total, 1) + '</strong> days saved over ' +
+        n(m.lead_known) + ' parts, ' + mxn,
       judge: judge(typeof mh === 'number' ? mh / 24 : null, T.make_lead_days, false, 1),
       target: 'make ≤ ' + n(T.make_lead_days) + ' d vs buy ' + n(T.buy_lead_days_reference) + ' d' + proposed(T.make_lead_proposal) +
-        ' · MXN ' + n(T.print_saving_mxn_year) + '/year',
+        ', MXN ' + n(T.print_saving_mxn_year) + '/year',
       spark: spark(items.map(function (it) { return { label: it.t + ' (h)', v: it.make_h }; }), { kind: 'bar', title: 'Hours from order to part in hand' }),
       extra: list + '<div class="note">Lead time = order (the part is asked for) → end of the final good print. Buying = order → delivery (~3 weeks) plus duty on parcels from non-treaty countries. <a href="/tools/make-or-buy/">Make-or-buy calculator →</a></div>',
       stale: staleNote(m) });
   }
   function rftTile(r, T) {
     var lab = typeof r.lab_rft_pct === 'number'
-      ? '<div class="note">Whole lab: <strong>' + n(r.lab_rft_pct, 1) + ' %</strong> of ' + n(r.lab_implemented) + ' implemented ideas needed no documented redo (' + n(r.lab_rework_ideas) + ' did) <span class="pill na">first count · under review</span></div>' : '';
+      ? '<div class="note">Whole lab: <strong>' + n(r.lab_rft_pct, 1) + ' %</strong> of ' + n(r.lab_implemented) + ' implemented ideas needed no documented redo (' + n(r.lab_rework_ideas) + ' did) <span class="pill na">first count, under review</span></div>' : '';
     var off = r.printer_reachable === false && r.history_as_of ? '<div class="note">Printer is off; print history as of ' + esc(r.history_as_of) + '.</div>' : '';
-    return tile({ id: 'rft', label: 'RFT — Right First Time', pdca: 'Check', value: n(r.rft_pct, 0), unit: '% of printed parts',
-      sub: '<strong>' + n(r.right_first_time) + '</strong> of ' + n(r.parts_attempted) + ' parts right on the first attempt · ' + n(r.parts_delivered) + ' delivered',
+    return tile({ id: 'rft', label: 'RFT: Right First Time', pdca: 'Check', value: n(r.rft_pct, 0), unit: '% of printed parts',
+      sub: '<strong>' + n(r.right_first_time) + '</strong> of ' + n(r.parts_attempted) + ' parts right on the first attempt, ' + n(r.parts_delivered) + ' delivered',
       judge: judge(r.rft_pct, T.rft_pct, true), target: 'RFT ≥ ' + n(T.rft_pct) + ' %' + proposed(T.rft_proposal),
       spark: '',
-      extra: '<div class="note">' + n(r.attempts_per_part, 2) + ' attempts per delivered part · ' + n(r.rework_attempts) + ' reprints · ' + n(r.no_starts) +
-        ' no-starts (aborted before the first layer, not counted) · ' + n(r.jobs_total) + ' print jobs since ' + esc(r.first_job || '–') + '</div>' + lab + off,
+      extra: '<div class="note">' + n(r.attempts_per_part, 2) + ' attempts per delivered part, ' + n(r.rework_attempts) + ' reprints, ' + n(r.no_starts) +
+        ' no-starts (aborted before the first layer, not counted), ' + n(r.jobs_total) + ' print jobs since ' + esc(r.first_job || "…") + '</div>' + lab + off,
       stale: staleNote(r) });
   }
   var MON3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   function copqTile(c, T) {
     var parts = Array.isArray(c.by_part) ? c.by_part : [], months = Array.isArray(c.by_month) ? c.by_month : [];
-    var pend = (c.assumptions_pending ? ' · <span class="pill na">assumptions pending</span>' : '') +
-      (c.unpriced_g ? ' · ' + n(c.unpriced_g, 1) + ' g not priced yet' : '');
+    var pend = (c.assumptions_pending ? ', <span class="pill na">assumptions pending</span>' : '') +
+      (c.unpriced_g ? ', ' + n(c.unpriced_g, 1) + ' g not priced yet' : '');
     var list = parts.length ? '<h3 class="mini">By part</h3><ul class="recent">' + parts.map(function (p) {
-      return '<li>' + esc(p.t) + ' — ' + (typeof p.mxn === 'number' ? 'MXN ' + n(p.mxn, 2) : 'MXN pending') + ' · ' + n(p.g, 1) + ' g · ' + n(p.h, 1) + ' h · ' + n(p.jobs) + ' failed</li>';
+      return '<li>' + esc(p.t) + ', ' + (typeof p.mxn === 'number' ? 'MXN ' + n(p.mxn, 2) : 'MXN pending') + ', ' + n(p.g, 1) + ' g, ' + n(p.h, 1) + ' h, ' + n(p.jobs) + ' failed</li>';
     }).join('') + '</ul>' : '';
-    return tile({ id: 'copq', label: 'COPQ — Cost of Poor Quality', pdca: 'Act', value: n(c.copq_mxn, 2), unit: 'MXN (internal failure)',
-      sub: 'scrap <strong>' + n(c.scrap_g, 1) + ' g</strong> from ' + n(c.scrap_jobs) + ' failed prints · <strong>' + n(c.hours_lost, 1) + ' h</strong> of printer time lost' + pend,
+    return tile({ id: 'copq', label: 'COPQ: Cost of Poor Quality', pdca: 'Act', value: n(c.copq_mxn, 2), unit: 'MXN (internal failure)',
+      sub: 'scrap <strong>' + n(c.scrap_g, 1) + ' g</strong> from ' + n(c.scrap_jobs) + ' failed prints, <strong>' + n(c.hours_lost, 1) + ' h</strong> of printer time lost' + pend,
       judge: pill('na', 'baseline'), target: 'trend to zero; no MXN target yet',
       spark: spark(months.map(function (m) { var i = parseInt(String(m.m).slice(5, 7), 10) - 1; return { label: (MON3[i] || m.m) + ' ' + String(m.m).slice(2, 4) + ' MXN', v: m.mxn }; }), { kind: 'bar', digits: 2, title: 'COPQ per month (MXN)' }),
       extra: list + '<div class="note">Filament of failed or cancelled prints × MXN/kg + their energy (hours × average W × MXN/kWh). Machine hours lost are shown as hours, not money.</div>',
@@ -252,13 +252,13 @@
   function ideaTile(live, stat, T) {
     var f = KL.ideaFunnel(live, stat.ideas), d = f.d;
     var rate = d.implementation_rate_pct, total = d.total;
-    var review = d.under_review !== false ? ' <span class="pill na">first count · under review</span>' : '';
+    var review = d.under_review !== false ? ' <span class="pill na">first count, under review</span>' : '';
     var titles = (d.public_titles_implemented || []).slice(0, 5);
     var caps = lastN(live && live.captures_per_week, 8).reduce(function (s, t) { return s + (t.n || 0); }, 0);
     var html = '<article class="card tile wide" aria-labelledby="t-idea">' +
       '<span class="label" id="t-idea">' + esc(T9('Ideas → implemented')) + ' <span class="pdca-chip">' + esc(T9('Plan → Do')) + '</span>' + review + '</span>' +
       '<div class="value">' + n(d.implemented) + '<span class="unit">of ' + n(total) + ' ideas implemented</span></div>' +
-      '<div class="sub"><strong>' + n(rate, 1) + '%</strong> implementation rate since July 2026 · ' + n(d.in_progress) + ' in progress · ' + n(d.parked) + ' parked · ' + n(d.dropped) + ' dropped</div>' +
+      '<div class="sub"><strong>' + n(rate, 1) + '%</strong> implementation rate since July 2026, ' + n(d.in_progress) + ' in progress, ' + n(d.parked) + ' parked, ' + n(d.dropped) + ' dropped</div>' +
       '<div class="target">' + judge(rate, T.implementation_rate_pct, true) + ' <span class="note">' + T9('target') + ' ≥ ' + n(T.implementation_rate_pct) + '%' + (T.implementation_rate_proposal ? ' (proposed)' : '') + '</span></div>' +
       '<div class="idea-grid">' +
         '<section><h3 class="mini">Funnel</h3><div class="bars">' +

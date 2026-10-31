@@ -15,10 +15,10 @@
       mixers: 4, mixBatchMin: 30, mixCrew: 2,
       drumBig: 600, nBig: 4, drumSmall: 300, nSmall: 4,
       lines: {
-        A: { name: 'Line A · cakes', sPer: 20, crew: 4, changeMin: 20 },
-        B: { name: 'Line B · brownies', sPer: 15, crew: 3, changeMin: 20 },
-        C: { name: 'Line C · slow-bake / slow-fill', sPer: 40, crew: 3, changeMin: 30 },
-        D: { name: 'Line D · low volume', sPer: 45, crew: 2, changeMin: 30 }
+        A: { name: 'Line A, cakes', sPer: 20, crew: 4, changeMin: 20 },
+        B: { name: 'Line B, brownies', sPer: 15, crew: 3, changeMin: 20 },
+        C: { name: 'Line C, slow-bake / slow-fill', sPer: 40, crew: 3, changeMin: 30 },
+        D: { name: 'Line D, low volume', sPer: 45, crew: 2, changeMin: 30 }
       },
       t1: 30, t2: 15, t3: 25, cakeMouldMax: 15, trolley13: 90, trolley2: 10, returnMin: 15,
       ovens: [
@@ -301,15 +301,15 @@
     A.push(area('mix', 'Mixing', fmt(mixBatches, 0) + ' drum batches (' + drumsBig + ' × ' + R.drumBig + ' lb + ' + drumsSmall + ' × ' + R.drumSmall + ' lb)', mixHours, mixHours / (R.mixers * dayH), R.mixCrew, drumsRot + ' of ' + drumsTotal + ' drums'));
     A.push(area('fill', 'Filling', fmt(sum(function (r) { return r.trays; }), 0) + ' trays on ' + activeLines.length + ' lines', fillHours, fillDays, fillCrew, ''));
     A.push(area('bake', 'Baking', ovenBatches + ' oven batches', ovenBusy / 60, makespan / 60 / dayH, R.ovenCrew, ''));
-    A.push(area('cool', 'Cooling (FIFO lane)', totalLoads + ' trolley loads', 0, 0, 0, fmt(trolleysRot, 0) + ' of ' + pool + ' trolleys', 'wait ' + fmt(S.coolMinMin, 0) + ' min – ' + fmt(maxWaitCal, 1) + ' h'));
-    if (halveCakes) A.push(area('conf1', 'Confectionery 1 · halve cakes', fmt(halveCakes, 0) + ' cakes', conf1Hours, conf1Hours / dayH, R.conf1Crew, ''));
-    A.push(area('conf2', 'Confectionery 2 · assemble / decorate', fmt(conf2Trays, 0) + ' trays', conf2Hours, conf2Hours / dayH, R.conf2Crew, ''));
-    if (cutterTrays) A.push(area('cutter', 'Confectionery 3 · brownie cutter', fmt(cutterTrays, 0) + ' trays (max ' + fmt(R.cutterTraysH * dayH, 0) + '/day)', cutterHours, cutterHours / dayH, R.cutterCrew, ''));
+    A.push(area('cool', 'Cooling (FIFO lane)', totalLoads + ' trolley loads', 0, 0, 0, fmt(trolleysRot, 0) + ' of ' + pool + ' trolleys', 'wait ' + fmt(S.coolMinMin, 0) + ' min to ' + fmt(maxWaitCal, 1) + ' h'));
+    if (halveCakes) A.push(area('conf1', 'Confectionery 1, halve cakes', fmt(halveCakes, 0) + ' cakes', conf1Hours, conf1Hours / dayH, R.conf1Crew, ''));
+    A.push(area('conf2', 'Confectionery 2, assemble / decorate', fmt(conf2Trays, 0) + ' trays', conf2Hours, conf2Hours / dayH, R.conf2Crew, ''));
+    if (cutterTrays) A.push(area('cutter', 'Confectionery 3, brownie cutter', fmt(cutterTrays, 0) + ' trays (max ' + fmt(R.cutterTraysH * dayH, 0) + '/day)', cutterHours, cutterHours / dayH, R.cutterCrew, ''));
     if (freezeTrays) A.push(area('freeze', 'Flash freezing (' + S.freezeH + ' h)', fmt(freezeTrays, 0) + ' trays', freezeDays * 24, freezeDays, 0, ''));
     if (frozenCutTrays) A.push(area('cut', 'Cutting frozen (' + (S.ultrasonic ? 'ultrasonic' : 'standard knives') + ')', fmt(frozenCutTrays, 0) + ' trays', cutHours, cutHours / dayH, R.cutCrew, ''));
-    if (p1Clams) A.push(area('p1', 'Packaging 1 · clams / shells', fmt(p1Clams, 0) + ' clams', p1Hours, p1Hours / dayH, R.p1Crew, ''));
-    if (p2Boxes) A.push(area('p2', 'Packaging 2 · boxes → pallets', fmt(p2Boxes, 0) + ' boxes', p2Hours, p2Hours / dayH, R.p2Crew, ''));
-    if (iwpPcs || p3Clams) A.push(area('p3', 'Packaging 3 · brownie line', (iwpPcs ? fmt(iwpPcs, 0) + ' IWP pcs' : '') + (both ? ' + ' : '') + (p3Clams ? fmt(p3Clams, 0) + ' clams' : ''), p3Hours, p3Hours / dayH, R.p3Crew, ''));
+    if (p1Clams) A.push(area('p1', 'Packaging 1, clams / shells', fmt(p1Clams, 0) + ' clams', p1Hours, p1Hours / dayH, R.p1Crew, ''));
+    if (p2Boxes) A.push(area('p2', 'Packaging 2, boxes → pallets', fmt(p2Boxes, 0) + ' boxes', p2Hours, p2Hours / dayH, R.p2Crew, ''));
+    if (iwpPcs || p3Clams) A.push(area('p3', 'Packaging 3, brownie line', (iwpPcs ? fmt(iwpPcs, 0) + ' IWP pcs' : '') + (both ? ' + ' : '') + (p3Clams ? fmt(p3Clams, 0) + ' clams' : ''), p3Hours, p3Hours / dayH, R.p3Crew, ''));
 
     var bn = A.reduce(function (b, a) { return a.days > b.days ? a : b; }, A[0]);
     bn.bottleneck = true;
@@ -369,7 +369,7 @@
     };
   }
 
-  function fmt(x, d) { return isFinite(x) ? Number(x).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) : '–'; }
+  function fmt(x, d) { return isFinite(x) ? Number(x).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) : "…"; }
   function money(x) { return '$' + fmt(x, 0); }
 
   var API = { DEF: DEF, compute: compute, drumsFor: drumsFor, clone: clone };
@@ -384,7 +384,7 @@
   var C = window.KLCapacity, S;
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function fmt(x, d) { return isFinite(x) ? Number(x).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) : '–'; }
+  function fmt(x, d) { return isFinite(x) ? Number(x).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) : "…"; }
   function getP(o, p) { return p.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, o); }
   function setP(o, p, v) { var ks = p.split('.'), a = o; for (var i = 0; i < ks.length - 1; i++) a = a[ks[i]]; a[ks[ks.length - 1]] = v; }
   var uid = 0;
@@ -444,7 +444,7 @@
     h += '<fieldset><legend>Trolleys and trays</legend>' + fields([['res.t1', 'Type 1 trolley (trays)'], ['res.t3', 'Type 3 trolley (trays)', 'Type 1 with one level empty for tall items; 25 is an assumed default.'], ['res.t2', 'Type 2 trolley (trays)', 'Rolls straight into the new ovens.'],
       ['res.cakeMouldMax', 'Cake-mould trays per trolley (max)'], ['res.trolley13', 'Type 1/3 trolleys owned'], ['res.trolley2', 'Type 2 trolleys owned'], ['res.trays', 'Aluminium trays owned'], ['res.returnMin', 'Trolley wash + return (min)']]) + '</fieldset>';
     h += '<fieldset><legend>Ovens</legend>' + S.res.ovens.map(function (o, i) {
-      return '<p class="mini-h">' + esc(o.name) + (o.kind === 'rotary' ? ' · manual load, takes cake moulds' : ' · no cake moulds') + '</p>' +
+      return '<p class="mini-h">' + esc(o.name) + (o.kind === 'rotary' ? ', manual load, takes cake moulds' : ', no cake moulds') + '</p>' +
         fields([['res.ovens.' + i + '.n', 'Ovens'], ['res.ovens.' + i + '.cap', 'Trays per batch'], ['res.ovens.' + i + '.loadMin', 'Load + unload (min)']]);
     }).join('') + fields([['res.ovenCrew', 'Oven people per shift']]) + '</fieldset>';
     h += '<fieldset><legend>Confectionery, freezing, cutting</legend>' + fields([['res.conf1Crew', 'Conf. 1 people (halving)'], ['res.conf2Crew', 'Conf. 2 people (assembly)'],
@@ -463,7 +463,7 @@
       var p = 'skus.' + i + '.';
       return '<details class="sku-card"><summary>' + esc(k.name) + '</summary>' + fields([
         [p + 'name', 'Name', '', 't'],
-        [p + 'line', 'Filling line', '', 's', [['A', 'A · cakes'], ['B', 'B · brownies'], ['C', 'C · slow-bake / slow-fill'], ['D', 'D · low volume']]],
+        [p + 'line', 'Filling line', '', 's', [['A', 'A, cakes'], ['B', 'B, brownies'], ['C', 'C, slow-bake / slow-fill'], ['D', 'D, low volume']]],
         [p + 'tray', 'Tray content', '', 's', [['slab', 'Batter slab (cut later)'], ['mould', 'Mini-dessert mould (9/12/18/24)'], ['cakemould', 'Cake mould (2/3), rotary only']]],
         [p + 'perTray', 'Items per tray', 'Slab = 1, mould = cavities.'], [p + 'piecesPerItem', 'Pieces per item', 'Cutter setting 12/24/48/96, wedges per cake, or 1.'],
         [p + 'ozPerItem', 'Batter per item (oz)'], [p + 'batter', 'Batter type', 'Same type = shared drums.', 't'], [p + 'bakeMin', 'Bake time (min)'],
@@ -487,19 +487,19 @@
     $('cap-err').textContent = ''; $('cap-out').removeAttribute('aria-busy');
     var bn = o.bottleneck;
     $('s-bn').textContent = bn.name;
-    $('s-bn-sub').textContent = fmt(bn.days, 1) + ' working days of work · ' + fmt(bn.load * 100, 0) + ' % of the ' + S.windowDays + '-day window';
+    $('s-bn-sub').textContent = fmt(bn.days, 1) + ' working days of work, ' + fmt(bn.load * 100, 0) + ' % of the ' + S.windowDays + '-day window';
     $('s-ship').textContent = dateTxt(o.ship);
-    $('s-ship-sub').innerHTML = o.ctpDays + ' working days · promise ' + S.promiseDays + ' days = ' + dateTxt(o.promise) + ' ' +
+    $('s-ship-sub').innerHTML = o.ctpDays + ' working days, promise ' + S.promiseDays + ' days = ' + dateTxt(o.promise) + ' ' +
       (o.slack === 0 ? '<span class="pill warn">on the promise day</span>' : o.slack > 0 ? '<span class="pill ok">' + o.slack + ' day' + (o.slack === 1 ? '' : 's') + ' early</span>' : '<span class="pill bad">' + (-o.slack) + ' day' + (o.slack === -1 ? '' : 's') + ' late</span>');
     $('s-trol').textContent = o.trolleysRot + ' of ' + o.pool;
     $('s-trol-sub').textContent = S.wipCap ? 'trolleys in rotation, capped at what the flows need' : o.blocked + ' trolleys waiting loaded in front of slow steps';
     $('s-takt').textContent = fmt(o.takt, 0) + ' s';
-    $('s-takt-sub').textContent = 'takt per tray · bottleneck cycle ' + fmt(o.bnCycle, 0) + ' s per tray of the order';
+    $('s-takt-sub').textContent = 'takt per tray, bottleneck cycle ' + fmt(o.bnCycle, 0) + ' s per tray of the order';
 
     $('areas').innerHTML = o.areas.map(function (a) {
       return '<tr' + (a.bottleneck ? ' class="bn"' : '') + '><th scope="row">' + esc(a.name) + (a.bottleneck ? ' <span class="pill bad">bottleneck</span>' : '') + '</th>' +
-        '<td>' + esc(a.unit) + '</td><td class="n">' + (a.hours ? fmt(a.hours, 1) : '–') + '</td><td class="n">' + (a.days ? fmt(a.days, 2) : '–') + '</td>' +
-        '<td class="n">' + (a.crew || '–') + '</td><td>' + esc(a.rot || a.extra || '') + (a.rot && a.extra ? ' · ' + esc(a.extra) : '') + '</td>' +
+        '<td>' + esc(a.unit) + '</td><td class="n">' + (a.hours ? fmt(a.hours, 1) : "…") + '</td><td class="n">' + (a.days ? fmt(a.days, 2) : "…") + '</td>' +
+        '<td class="n">' + (a.crew || "…") + '</td><td>' + esc(a.rot || a.extra || '') + (a.rot && a.extra ? ', ' + esc(a.extra) : '') + '</td>' +
         '<td class="nowrap">' + (a.id === 'wh' ? loadBar(o.pallets / Math.max(1, o.whFree)) : a.id === 'cool' ? '' : a.id === 'freeze' ? loadBar(a.peak || 0) + ' peak' : loadBar(a.load)) + '</td></tr>';
     }).join('');
     var people = o.areas.reduce(function (s, a) { return s + (a.crew || 0); }, 0);
@@ -513,7 +513,7 @@
         '</td><td class="n">' + r.traysNet + ' → ' + r.trays + '</td><td class="n">' + fmt(r.lb, 0) + '</td><td class="n">' + r.batches + (r.partial ? ' (' + r.partial + ' part)' : '') +
         '</td><td class="n">' + (r.loads13 + r.loads2) + '</td></tr>';
     }).join('');
-    $('drums').textContent = Object.keys(o.batters).map(function (n) { var b = o.batters[n]; return n + ': ' + fmt(b.lb, 0) + ' lb → ' + b.drums.big + ' × ' + S.res.drumBig + ' + ' + b.drums.small + ' × ' + S.res.drumSmall + ' lb'; }).join(' · ') +
+    $('drums').textContent = Object.keys(o.batters).map(function (n) { var b = o.batters[n]; return n + ': ' + fmt(b.lb, 0) + ' lb → ' + b.drums.big + ' × ' + S.res.drumBig + ' + ' + b.drums.small + ' × ' + S.res.drumSmall + ' lb'; }).join(', ') +
       '. Drums in rotation: ' + o.drumsRot + ' (' + S.mode + '); batter waits up to ' + fmt(o.batterAgeMin / 60, 1) + ' h.';
 
     var cutterWord = o.cutterTrays ? 'The brownie cutter cuts at most ' + fmt(S.res.cutterTraysH * o.dayH, 0) + ' trays a day. ' : '';

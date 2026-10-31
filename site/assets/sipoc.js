@@ -13,15 +13,15 @@
   function ideaLabel(k, bundled) {
     var KL = window.KL, n = KL.num;
     var d = KL.ideaFunnel ? KL.ideaFunnel(k && k.ideas, bundled).d : {};
-    if (typeof d.total !== 'number') return 'ideas: –';
-    return n(d.total) + ' ideas since Jul · ' + n(d.implemented) + ' implemented (' + n(d.implementation_rate_pct, 0) + '%)';
+    if (typeof d.total !== 'number') return 'ideas: …';
+    return n(d.total) + ' ideas since Jul, ' + n(d.implemented) + ' implemented (' + n(d.implementation_rate_pct, 0) + '%)';
   }
   // 3D printing on the Process -> Outputs arrow (lane L100): make lead time vs buying + import duty
   function printLabel(mv) {
     var n = window.KL.num;
     if (!mv || typeof mv.median_make_h !== 'number') return '';
     var h = mv.median_make_h, lead = h < 48 ? n(h, h % 1 ? 1 : 0) + ' h' : n(h / 24, 1) + ' d';
-    return ' · print at home: ' + lead + ' · vs ' + n(mv.median_days_buy) + ' d + ' + n(mv.import_tax_pct, 1) + ' % tax';
+    return ', print at home: ' + lead + ', vs ' + n(mv.median_days_buy) + ' d + ' + n(mv.import_tax_pct, 1) + ' % tax';
   }
   function arrowLabels(m, bundledIdeas) {
     if (!m || !m.kpis) return ['', '', '', ''];
@@ -31,9 +31,9 @@
     var r7 = k.renders && k.renders.total_7d;
     return [
       ideaLabel(k, bundledIdeas),
-      pdca == null ? 'PDCA: –' : n(pdca) + ' PDCA cycles',
-      (up == null ? 'uptime: –' : n(up, 1) + '% uptime (30 d)') + printLabel(k.make_vs_buy),
-      (r7 == null ? '– renders' : n(r7) + ' renders/7 d') + ' · ' + (st == null ? '–' : n(st)) + ' d backup streak'
+      pdca == null ? 'PDCA: …' : n(pdca) + ' PDCA cycles',
+      (up == null ? 'uptime: …' : n(up, 1) + '% uptime (30 d)') + printLabel(k.make_vs_buy),
+      (r7 == null ? '… renders' : n(r7) + ' renders/7 d') + ', ' + (st == null ? "…" : n(st)) + ' d backup streak'
     ];
   }
   function el(name, attrs, text) {
@@ -70,7 +70,7 @@
       labels.forEach(function (l, i) {
         var cx = (i + 1) * (colW + gap) - gap / 2;
         var t = el('text', { x: cx, y: 22, 'text-anchor': 'middle', class: 'num' });
-        l.split(' · ').forEach(function (part, j) {
+        l.split(', ').forEach(function (part, j) {
           t.appendChild(el('tspan', { x: cx, dy: j ? '1.2em' : '0' }, part));
         });
         // the number for each arrow sits under the gap it belongs to, tied to it by a dotted tick

@@ -1,15 +1,15 @@
-/* OEE calculator — client-side only. */
+/* OEE calculator, client-side only. */
 (function () {
   'use strict';
   function $(id) { return document.getElementById(id); }
   function val(id) { var v = parseFloat($(id).value); return isFinite(v) ? v : NaN; }
-  function pct(x) { return isFinite(x) ? (x * 100).toFixed(1) + '%' : '–'; }
-  function mins(x) { return isFinite(x) ? x.toFixed(0) + ' min' : '–'; }
+  function pct(x) { return isFinite(x) ? (x * 100).toFixed(1) + '%' : "…"; }
+  function mins(x) { return isFinite(x) ? x.toFixed(0) + ' min' : "…"; }
   function setBar(k, x) { $('b-' + k).style.width = isFinite(x) ? Math.max(0, Math.min(100, x * 100)) + '%' : '0'; $('p-' + k).textContent = pct(x); }
   function clear(msg) {
     ['a', 'p', 'q'].forEach(function (k) { setBar(k, NaN); });
-    ['l-a', 'l-p', 'l-q', 'l-f'].forEach(function (i) { $(i).textContent = '–'; });
-    $('oee-val').textContent = '–'; $('oee-class').textContent = ''; $('oee-err').textContent = msg || '';
+    ['l-a', 'l-p', 'l-q', 'l-f'].forEach(function (i) { $(i).textContent = "…"; });
+    $('oee-val').textContent = "…"; $('oee-class').textContent = ''; $('oee-err').textContent = msg || '';
   }
   function calc() {
     var planned = val('planned'), down = val('down'), ideal = val('ideal'), total = val('total'), good = val('good');
