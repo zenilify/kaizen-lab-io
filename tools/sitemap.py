@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Write dist/sitemap.xml from the pages in site/ (every index.html except the 404). Run by tools/build.sh."""
+"""Write dist/sitemap.xml from the pages in site/ (every index.html except the 404 and noindex pages). Run by tools/build.sh."""
 import pathlib, sys
 from xml.sax.saxutils import escape
 root = pathlib.Path(__file__).resolve().parent.parent
 urls = []
 for f in sorted((root / "site").rglob("index.html")):
+    if 'name="robots" content="noindex' in f.read_text(encoding="utf-8", errors="ignore"):
+        continue  # unlisted pages (e.g. /v/<slug>/) stay out of the sitemap
     rel = f.parent.relative_to(root / "site").as_posix()
     urls.append("https://kaizen-lab.io/" + ("" if rel == "." else rel + "/"))
 body = "".join(f"  <url><loc>{escape(u)}</loc></url>\n" for u in urls)
